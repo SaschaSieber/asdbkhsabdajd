@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Information</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Tool Information</h1>
+        {% if tool_info %}
+            <table class="table table-bordered mt-4">
+                <tr>
+                    <th>Tool Name</th>
+                    <td>{{ tool_info.tool_name }}</td>
+                </tr>
+                <tr>
+                    <th>Web Link</th>
+                    <td><a href="{{ tool_info.web_link }}" target="_blank">{{ tool_info.web_link }}</a></td>
+                </tr>
+                <tr>
+                    <th>Pfad</th>
+                    <td>{{ tool_info.location }}</td>
+                </tr>
+                <tr>
+                    <th>Tool Info</th>
+                    <td>{{ tool_info.tool_info }}</td>
+                </tr>
+                <tr>
+                    <th>Tool Version</th>
+                    <td>{{ tool_info.tool_version }}</td>
+                </tr>
+                <tr>
+                    <th>Ansprechpartner</th>
+                    <td>{{ tool_info.contact_person }}</td>
+                </tr>
+                <tr>
+                    <th>Support Email</th>
+                    <td>{{ tool_info.Support_email }}</td>
+                </tr>
+            </table>
+        {% else %}
+            <p class="text-center">No information found for the selected table.</p>
+        {% endif %}
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary">Zurück zu aMOS-Datenportal</a>
+        </div>
+    </div>
+</body>
+</html>
