@@ -5,13 +5,12 @@ services:
     build:
       context: .  # Path on the host where Dockerfile is located
       dockerfile: Dockerfile
-    
+    image: amos-data-portal:latest
     ports:
-      - "3000:3000"
+      - "5000:5000"
     environment:
       - FLASK_ENV=development
       - DB_HOST=192.168.0.11
-      - DB_HOST2=192.168.0.12
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=PgresPW#amotIQ

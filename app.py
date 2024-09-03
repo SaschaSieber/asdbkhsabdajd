@@ -7,11 +7,11 @@ from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
 
 # Configure your PostgreSQL connection details
-DB_HOST = '9a8fdf0.online-server.cloud'
+DB_HOST = '192.168.0.11'
 DB_PORT = 5432
 DB_USER = 'postgres'
 DB_PASSWORD = 'PgresPW#amotIQ'
-DB_NAME = 'plaungstool_amos'
+DB_NAME = 'planungstool'
 DB_NAME1 = 'gemeinsam'
 
 
@@ -140,5 +140,4 @@ def view_table(table_name):
 
 
 if __name__ == '__main__':
-    app.run(app)
-
+    app.run(host='0.0.0.0', port=5000)
