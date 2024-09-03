@@ -1,0 +1,51 @@
+{
+  "nodes": [
+   
+      {
+          "ID": "abf_PVplus_final",
+          "names": [
+              "tbl_pv_klassifizierung","tbl_pv_matrix","tbl_ldm_gg","tbl_preise","tbl_ltm_info_1","tbl_pavo","tbl_dispober","tbl_plankalender","tbl_t005","tbl_wertgrenzen","tbl_aktivesachnummern","tbl_mara_tech","tbl_makt","tbl_marc","tbl_mdma","tbl_ldm_matnr","tbl_abl","tbl_lips","tbl_eord","tbl_ekpo","tbl_ekko","tbl_lfa1","tbl_abrufprofil"
+          ],
+          "level": 4
+      },
+      {
+        "ID": "abf_BOMplus_final",
+        "names": [
+            "tbl_br_new","tbl_factor","tbl_pavo_abweich","tbl_abl","tbl_lips","tbl_eord","tbl_ekpo","tbl_abrufprofil","tbl_ekko","tbl_lfa1","tbl_ltm_info","tbl_wpp_kundbez","tbl_ct_auslastung","tbl_pavo","tbl_mara_lt","tbl_ldm_gg","tbl_vbap","tbl_tvro","tbl_dispober","tbl_wavor"
+        ],
+        "level": 4
+    },
+      {
+        "ID": "abf_ABC_Kennzeichen",
+        "names": [
+"tbl_aktivesachnummern","tbl_preise","tbl_wertgrenzen","tbl_lips","tbl_likp","tbl_abl","tbl_eord","tbl_ekpo","tbl_abrufprofil","tbl_ekko","tbl_lfa1","tbl_mara_tech","tbl_makt","tbl_mdma","tbl_marc"        ],
+        "level": 4
+    },
+    {
+      "ID": "abf_Partmaster_Export",
+      "names": [
+                "tbl_pv_klassifizierung","tbl_pv_matrix","tbl_ldm_gg","tbl_preise","tbl_ltm_info_1","tbl_pavo","tbl_dispober","tbl_plankalender","tbl_t005","tbl_wertgrenzen","tbl_aktivesachnummern","tbl_mara_tech","tbl_makt","tbl_marc","tbl_mdma","tbl_ldm_matnr","tbl_abl","tbl_lips","tbl_eord","tbl_ekpo","tbl_ekko","tbl_lfa1","tbl_abrufprofil"," tbl_ekbel"      ],
+      "level": 4
+  },
+  {
+    "ID": "abf_ABC_Klassifizierung",
+    "names": [
+"tbl_aktivesachnummern","tbl_preise","tbl_wertgrenzen","tbl_lips","tbl_likp","tbl_abl","tbl_eord","tbl_ekpo","tbl_abrufprofil","tbl_ekko","tbl_lfa1","tbl_mara_tech","tbl_makt","tbl_mdma","tbl_marc","tbl_wevor"    ],
+    "level": 4
+},
+{
+  "ID": "abf_Materialflussparam",
+  "names": [
+"tbl_pv_klassifizierung","tbl_pv_matrix","tbl_ldm_gg","tbl_preise","tbl_ltm_info_1","tbl_pavo","tbl_dispober","tbl_plankalender","tbl_t005","tbl_wertgrenzen","tbl_aktivesachnummern","tbl_mara_tech","tbl_makt","tbl_marc","tbl_mdma","tbl_ldm_matnr","tbl_abl","tbl_lips","tbl_eord","tbl_ekpo","tbl_ekko","tbl_lfa1","tbl_abrufprofil"],
+
+  "level": 4
+},
+{
+  "ID": "abf_KPI_IDOCs",
+  "names": [
+"tbl_EDIDS_import"," tbl_EDIDC_import"," tbl_EDID4_import"],
+  "level": 4
+}
+  ],
+  "links": []
+}

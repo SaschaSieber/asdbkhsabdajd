@@ -1,0 +1,28 @@
+{
+    "nodes": [
+     
+        { "ID": "abf_BOMplus_finalPlannungstool", "name": "abf_BOMplus_final","level": 3, "Tool":"Plannungstool"},
+        { "ID": "abf_PVplus_finalPlannungstool", "name": "abf_PVplus_final","level": 3,"Tool":"Plannungstool" },
+        { "ID": "abf_ABC_KennzeichenPlannungstool", "name": "abf_ABC_Kennzeichen","level": 3,"Tool":"Plannungstool" },
+        { "ID": "abf_Partmaster_ExportPlannungstool", "name": "abf_Partmaster_Export","level": 3,"Tool":"Plannungstool" },
+        { "ID": "TestRechnungs", "name": "TestRechnungs","level": 3,"Tool":"Rechnungs" },
+        { "ID": "abf_MaterialflussparamPlannungstool", "name": "abf_Materialflussparam","level": 3,"Tool":"Plannungstool"},
+
+
+
+        { "ID": "abf_BOMplus_finalKPI DW51", "name": "abf_BOMplus_final","level": 3,"Tool":"KPI DW51"},
+        
+        { "ID": "abf_DummyData01KPI DW51", "name": "abf_DummyData01","level": 3,"Tool":"KPI DW51"},
+        { "ID": "abf_DummyData02KPI DW51", "name": "abf_DummyData01","level": 3,"Tool":"KPI DW51"},
+        { "ID": "abf_DummyData03KPI DW51", "name": "abf_DummyData01","level": 3,"Tool":"KPI DW51"}
+      
+      
+      ]
+    ,
+    "links": [
+
+      
+    
+  
+      ]
+}
