@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     image: amos-data-portal:latest
     ports:
-      - "3000:3000"
+      - "80:80"
     environment:
       - FLASK_ENV=development
       - DB_HOST=192.168.0.11
