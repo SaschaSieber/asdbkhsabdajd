@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - DB_HOST=192.168.0.11
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=PgresPW#amotIQ
+      - DB_NAME=planungstool
+      - DB_NAME1=gemeinsam

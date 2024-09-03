@@ -1,0 +1,38 @@
+
+{
+    "nodes": [
+    { "ID": "Taktische Volumenplanung", "name": "Taktische Volumenplanung", "FollowUpNode": "Plannungstool", "level": 1 },
+    { "ID": "Berechnung Mindesthandlingszeit LDL", "name": "Berechnung Mindesthandlingszeit LDL", "FollowUpNode": "Plannungstool", "level": 1 },
+    { "ID": "Abweichungen Stammdaten", "name": "Abweichungen Stammdaten", "FollowUpNode": "Plannungstool", "level": 1 },
+    { "ID": "packmittelumstellung auf Feinabruf", "name": "packmittelumstellung auf Feinabruf", "FollowUpNode": "Plannungstool", "level": 1 },
+    { "ID": "Bestandsreduzierung", "name": "Bestandsreduzierung", "FollowUpNode": "Plannungstool", "level": 1 },
+    { "ID": "Monatliche Rechnungsprüfung LDL", "name": "Monatliche Rechnungsprüfung LDL", "FollowUpNode": "Rechnungsprüfung", "level": 1 },
+    { "ID": "Handlingsklassenabgleich", "name": "Handlingsklassenabgleich", "FollowUpNode": "Rechnungsprüfung", "level": 1 },
+    { "ID": "Darstellung der Lieferbeziehungen SD und MM", "name": "Darstellung der Lieferbeziehungen SD und MM", "FollowUpNode": "Rechnungsprüfung", "level": 1 },
+
+    { "ID": "Rückstandswertbetrachtung", "name": "Rückstandswertbetrachtung", "FollowUpNode": "Bestandsmanagement", "level": 1 },
+    { "ID": "Bestände ohne Bedarf", "name": "Bestände ohne Bedarf", "FollowUpNode": "Bestandsmanagement", "level": 1 },
+    { "ID": "Zu erwartender Endbestand mit geplanten WE's & WA's", "name": "Zu erwartender Endbestand mit geplanten WE's & WA's", "FollowUpNode": "Bestandsprognose", "level": 1 },
+    { "ID": "Berechnung der Umschlagshäufigkeit", "name": "Berechnung der Umschlagshäufigkeit", "FollowUpNode": "Turn Over Rates", "level": 1 },
+    { "ID": "Bestand ohne Auftrag", "name": "Bestand ohne Auftrag", "FollowUpNode": "KPI DW51", "level": 1 },
+    { "ID": "IDOCs auf Fehler", "name": "IDOCs auf Fehler", "FollowUpNode": "KPI DW51", "level": 1 },
+    { "ID": "Visualisierung Bearbeitungsstand offener Bedarfe in SMB", "name": "Visualisierung Bearbeitungsstand offener Bedarfe in SMB", "FollowUpNode": "KPI DW51", "level": 1 },
+    { "ID": "Elektronische Leergutverwaltung CC-Süd", "name": "Elektronische Leergutverwaltung CC-Süd", "FollowUpNode": "Elvis", "level": 1 },
+    { "ID": "Verwaltung von Luftfrachten und kritischer Lieferanten", "name": "Verwaltung von Luftfrachten und kritischer Lieferanten", "FollowUpNode": "aLLV", "level": 1 },
+    { "ID": "Durchlaufzeit Avise bis Zweiterfassung", "name": "Durchlaufzeit Avise bis Zweiterfassung", "FollowUpNode": "DW51 Avise Tool", "level": 1 }
+
+],
+"links": [
+    { "source": "Taktische Volumenplanung", "target": "Berechnung Mindesthandlingszeit LDL" },
+    { "source": "Abweichungen Stammdaten", "target": "packmittelumstellung auf Feinabruf" },
+    {  "source": "Berechnung Mindesthandlingszeit LDL", "target": "Abweichungen Stammdaten" },
+    {  "source": "Berechnung Mindesthandlingszeit LDL", "target": "Abweichungen Stammdaten" },
+    {  "source": "packmittelumstellung auf Feinabruf", "target": "Bestandsreduzierung" },
+
+    {  "source": "Monatliche Rechnungsprüfung LDL", "target": "Handlingsklassenabgleich" },
+    {  "source": "Rückstandswertbetrachtung", "target": "Bestände ohne Bedarf" },
+    {  "source": "Bestand ohne Auftrag", "target": "IDOCs auf Fehler" },
+    {  "source": "IDOCs auf Fehler", "target": "Visualisierung Bearbeitungsstand offener Bedarfe in SMB" },
+    {  "source": "Handlingsklassenabgleich", "target": "Darstellung der Lieferbeziehungen SD und MM" }
+]
+}
