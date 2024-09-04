@@ -22,7 +22,7 @@ global currentServer
 
 # SQLAlchemy connection string
 DATABASE_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-DATABASE_URL1 = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST2}:{DB_PORT}/{DB_NAME1}'
+DATABASE_URL1 = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME1}'
 
 # Create SQLAlchemy engine
 engine= create_engine(DATABASE_URL)
