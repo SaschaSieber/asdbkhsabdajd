@@ -196,7 +196,7 @@ def tool_info(table_name):
     query = text("""
         SELECT tool_name, web_link, location, tool_info, tool_version, contact_person, "Support_email"
         FROM tbl_tools
-        WHERE tool_name = :table_name
+         WHERE tool_name ILIKE :table_name
     """)
     with engine1.connect() as connection:
         result = connection.execute(query, {'table_name': table_name}).fetchone()
