@@ -7,7 +7,7 @@ from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
 
 # Configure your PostgreSQL connection details
-DB_HOST = '82.165.166.108'
+DB_HOST = '192.168.0.11'
 DB_PORT = 5432
 DB_USER = 'postgres'
 DB_PASSWORD = 'PgresPW#amotIQ'
