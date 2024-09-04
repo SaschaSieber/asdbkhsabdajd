@@ -4,6 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from psycopg2 import OperationalError
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 
@@ -28,6 +29,7 @@ engine= create_engine(DATABASE_URL)
 engine1= create_engine(DATABASE_URL1)
 
 selected_db = None 
+CORS(app)
 
 
 servers = [
