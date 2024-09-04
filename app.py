@@ -120,32 +120,15 @@ def after_request(response):
 def get_table_columns(table_name):
     
     try:
-        for server in servers:
-
-          if check_database_exists(
-            host=server["host"],
-            port=server["port"],
-            user=server["user"],
-            password=server["password"],
-            database_name=selected_db
-        ):
-                
+         conn = get_db_connection("planungstool", "192.168.0.11")
+         cursor = conn.cursor()
+         global currentServer
+         currentServer=server["host"]
+        
 
 
-                # Connect to the selected database on the correct server
-                conn = psycopg2.connect(
-                    host=server["host"],
-                    port=server["port"],
-                    user=server["user"],
-                    password=server["password"],
-                    dbname=selected_db
-                )
 
-
-                conn = get_db_connection("planungstool", "192.168.0.11")
-                cursor = conn.cursor()
-                global currentServer
-                currentServer=server["host"]
+               
         
 
         
