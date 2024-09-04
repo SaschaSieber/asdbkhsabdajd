@@ -215,7 +215,8 @@
                  else if(d.level===2& event.ctrlKey ){
                     console.log("test")
                     const link = document.createElement('a');
-                    link.href = '82.165.126.38:3000/tool_info/Planungstool';
+                    link.href = `tool_info/${d.name}`;
+
                     link.target = '_blank'; 
                     link.click();
 
