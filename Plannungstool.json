@@ -1,12 +1,12 @@
 {
     "nodes": [
      
-        { "ID": "abf_BOMplus_finalPlannungstool", "name": "abf_BOMplus_final","level": 3, "Tool":"Plannungstool"},
-        { "ID": "abf_PVplus_finalPlannungstool", "name": "abf_PVplus_final","level": 3,"Tool":"Plannungstool" },
-        { "ID": "abf_ABC_KennzeichenPlannungstool", "name": "abf_ABC_Kennzeichen","level": 3,"Tool":"Plannungstool" },
-        { "ID": "abf_Partmaster_ExportPlannungstool", "name": "abf_Partmaster_Export","level": 3,"Tool":"Plannungstool" },
+        { "ID": "abf_BOMplus_finalPlannungstool", "name": "abf_BOMplus_final","level": 3, "Tool":"Planungstool"},
+        { "ID": "abf_PVplus_finalPlannungstool", "name": "abf_PVplus_final","level": 3,"Tool":"Planungstool" },
+        { "ID": "abf_ABC_KennzeichenPlannungstool", "name": "abf_ABC_Kennzeichen","level": 3,"Tool":"Planungstool" },
+        { "ID": "abf_Partmaster_ExportPlannungstool", "name": "abf_Partmaster_Export","level": 3,"Tool":"Planungstool" },
         { "ID": "TestRechnungs", "name": "TestRechnungs","level": 3,"Tool":"Rechnungs" },
-        { "ID": "abf_MaterialflussparamPlannungstool", "name": "abf_Materialflussparam","level": 3,"Tool":"Plannungstool"},
+        { "ID": "abf_MaterialflussparamPlannungstool", "name": "abf_Materialflussparam","level": 3,"Tool":"Planungstool"},
 
 
 
