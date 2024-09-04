@@ -118,10 +118,7 @@ def after_request(response):
 
 @app.route('/table/<table_name>', methods=['GET'])
 def get_table_columns(table_name):
-    global selected_db_global  # Make sure to use the global variable
-    selected_db = selected_db_global.lower() 
-    print("now")
-    print(selected_db)
+    
     try:
         for server in servers:
 
@@ -143,6 +140,9 @@ def get_table_columns(table_name):
                     password=server["password"],
                     dbname=selected_db
                 )
+
+
+                conn = get_db_connection("planungstool", "192.168.0.11")
                 cursor = conn.cursor()
                 global currentServer
                 currentServer=server["host"]
