@@ -120,19 +120,10 @@ def after_request(response):
 def get_table_columns(table_name):
     
     try:
-         conn = get_db_connection("planungstool", "192.168.0.11")
-         cursor = conn.cursor()
-         global currentServer
-         currentServer=server["host"]
-        
-
-
-
-               
-        
-
-        
-       
+         
+        conn = get_db_connection("planungstool", "192.168.0.11")
+        cursor = conn.cursor()
+  
                
         # Use the correct server for connection (assuming 'currentServer' is set correctly)
         
@@ -152,6 +143,7 @@ def get_table_columns(table_name):
     except Exception as e:
         print('Error querying database:', e)
         return jsonify({'error': 'Error querying database'}), 500
+
 
 @app.route('/uploadlogs/<table_name>', methods=['GET'])
 def get_upload_logs(table_name):
