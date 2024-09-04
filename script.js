@@ -12,6 +12,10 @@
         ]
     };
 
+    document.getElementById("redirect-button").addEventListener("click", function() {
+        window.location.href = "http://82.165.126.38:5000"; // Specify your desired link here
+    });
+
     function setNodeColors(nodes) {
         const colorScale = d3.scaleOrdinal()
             .domain(["Funktionen", "Tools", "Abfragen", "Tabelle"])
@@ -185,6 +189,7 @@
                     if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(graphData)) {
                         graphDataStack.push({ nodes: graphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: graphData.links });
                         }
+                        sendValueToBackend(d.name) 
                         d3.json(`Plannungstool.json`).then(newData => {
                             console.log('New graph data:', newData);
                             d3.select("svg").remove();
@@ -205,11 +210,12 @@
                         console.error('Error loading JSON:', error);
                     });
                     
+                    
                  }
                  else if(d.level===2& event.ctrlKey ){
                     console.log("test")
                     const link = document.createElement('a');
-                    link.href = 'http://82.165.166.108:3000/tool_info/Planungstool';
+                    link.href = '82.165.126.38:3000/tool_info/Planungstool';
                     link.target = '_blank'; 
                     link.click();
 
@@ -306,10 +312,27 @@
             .catch(error => console.error('Error fetching tool info:', error));
     }
 
+    function sendValueToBackend(selectedValue) {
+        fetch('/export', { // Adjust the URL to match your backend endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ selectedDatabase: selectedValue }), // Send the selected value as JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response from backend:', data);
+        })
+        .catch(error => console.error('Error sending value to backend:', error));
+    }
+
+
+
 
     async function FetToolsInfo(d) {
         try {
-            let response = await fetch(`http://82.165.166.108:3000/tool_info/${d.name}`);
+            let response = await fetch(`http://localhost:3000/tool_info/${d.name}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -321,6 +344,7 @@
             throw error; // Rethrow the error to propagate it to the caller
         }
     }
+
     
    
 
@@ -328,7 +352,7 @@
     
     async function fetchLogs(d) {
         try {
-            let response = await fetch(`http://82.165.166.108:3000/uploadlogs/${d.name}`);
+            let response = await fetch(`http://82.165.166.108:3000/tool_info/${d.name}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -477,7 +501,7 @@
                
                     // Create the link element
                     var link = document.createElement('a');
-                    link.href = `https://a11ccbd.online-server.cloud:7081/pgadmin`;
+                    link.href = `https://www.pgadmin.org/`;
                     
                     link.target = '_blank'; 
                     link.id = 'sidebar-link';
