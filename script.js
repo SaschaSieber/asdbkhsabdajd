@@ -353,7 +353,7 @@
     
     async function fetchLogs(d) {
         try {
-            let response = await fetch(`http://82.165.126.38:3000/tool_info/${d.name}`);
+            let response = await fetch(`http://82.165.126.38:3000/uploadlogs/${d.name}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
