@@ -290,7 +290,7 @@
     async function fetchData(d) {
         try {
     
-            let response = await fetch(`http://82.165.126.38:3000/table/${encodeURIComponent(d.name)}`);
+            let response = await fetch(`/table/${encodeURIComponent(d.name)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -333,7 +333,7 @@
 
     async function FetToolsInfo(d) {
         try {
-            let response = await fetch(`http://localhost:3000/tool_info/${d.name}`);
+            let response = await fetch('/tool_info/${d.name}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
