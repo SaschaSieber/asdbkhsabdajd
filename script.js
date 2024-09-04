@@ -290,7 +290,7 @@
     async function fetchData(d) {
         try {
     
-            let response = await fetch(`http://82.165.166.108:3000/table/${encodeURIComponent(d.name)}`);
+            let response = await fetch(`http://82.165.126.38:3000/table/${encodeURIComponent(d.name)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -353,7 +353,7 @@
     
     async function fetchLogs(d) {
         try {
-            let response = await fetch(`http://82.165.166.108:3000/tool_info/${d.name}`);
+            let response = await fetch(`http://82.165.126.38:3000/tool_info/${d.name}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -470,7 +470,7 @@
                
                     // Create the link element
                     var link = document.createElement('a');
-                    link.href = `http://82.165.166.108:3000/view_table/${d.name}`;
+                    link.href = `http://82.165.126.38:3000/view_table/${d.name}`;
                     link.target = '_blank'; 
                     link.id = 'sidebar-link';
     
