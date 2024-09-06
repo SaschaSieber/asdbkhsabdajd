@@ -1,11 +1,11 @@
 
 {
     "nodes": [
-    { "ID": "Taktische Volumenplanung", "name": "Taktische Volumenplanung", "FollowUpNode": "Plannungstool", "level": 1 },
-    { "ID": "Berechnung Mindesthandlingszeit LDL", "name": "Berechnung Mindesthandlingszeit LDL", "FollowUpNode": "Plannungstool", "level": 1 },
-    { "ID": "Abweichungen Stammdaten", "name": "Abweichungen Stammdaten", "FollowUpNode": "Plannungstool", "level": 1 },
-    { "ID": "packmittelumstellung auf Feinabruf", "name": "packmittelumstellung auf Feinabruf", "FollowUpNode": "Plannungstool", "level": 1 },
-    { "ID": "Bestandsreduzierung", "name": "Bestandsreduzierung", "FollowUpNode": "Plannungstool", "level": 1 },
+    { "ID": "Taktische Volumenplanung", "name": "Taktische Volumenplanung", "FollowUpNode": "Planungstool", "level": 1 },
+    { "ID": "Berechnung Mindesthandlingszeit LDL", "name": "Berechnung Mindesthandlingszeit LDL", "FollowUpNode": "Planungstool", "level": 1 },
+    { "ID": "Abweichungen Stammdaten", "name": "Abweichungen Stammdaten", "FollowUpNode": "Planungstool", "level": 1 },
+    { "ID": "packmittelumstellung auf Feinabruf", "name": "packmittelumstellung auf Feinabruf", "FollowUpNode": "Planungstool", "level": 1 },
+    { "ID": "Bestandsreduzierung", "name": "Bestandsreduzierung", "FollowUpNode": "Planungstool", "level": 1 },
     { "ID": "Monatliche Rechnungsprüfung LDL", "name": "Monatliche Rechnungsprüfung LDL", "FollowUpNode": "Rechnungsprüfung", "level": 1 },
     { "ID": "Handlingsklassenabgleich", "name": "Handlingsklassenabgleich", "FollowUpNode": "Rechnungsprüfung", "level": 1 },
     { "ID": "Darstellung der Lieferbeziehungen SD und MM", "name": "Darstellung der Lieferbeziehungen SD und MM", "FollowUpNode": "Rechnungsprüfung", "level": 1 },
