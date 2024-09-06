@@ -190,7 +190,7 @@
                         graphDataStack.push({ nodes: graphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: graphData.links });
                         }
                         sendValueToBackend(d.name) 
-                        d3.json(`Plannungstool.json`).then(newData => {
+                        d3.json(`Planungstool.json`).then(newData => {
                             console.log('New graph data:', newData);
                             d3.select("svg").remove();
                     
@@ -625,7 +625,7 @@
     
         
         
-                grandchildMData = await d3.json('Plannungstool.json');
+                grandchildMData = await d3.json('Planungstool.json');
                 const grandchilMdren = grandchildMData.nodes;
                 for (const child of grandchilMdren) {
                     if(child.name.toLowerCase().includes(query))
@@ -647,7 +647,7 @@
 
             else if(foundNodes.length >0){
                 const newData = await d3.json('Tools.json');
-                const toolsData = await d3.json('Plannungstool.json');
+                const toolsData = await d3.json('Planungstool.json');
         
                 d3.select("svg").remove();
         
