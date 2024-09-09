@@ -67,7 +67,131 @@ def check_database_exists(host, port, user, password, database_name, timeout=50)
         print(f"OperationalError: {e}")
         return False
 
+@app.route('/generate_tools_json', methods=['GET'])
+def generate_tools_json():
+    conn = get_db_connection("planungstool", "192.168.0.11")
+    cursor = conn.cursor()
 
+    try:
+        # First SQL query for tools
+        querySQL = "SELECT DISTINCT tool FROM tbl_tool_def WHERE tool IS NOT NULL"
+        cursor.execute(querySQL)
+
+        results = cursor.fetchall()
+
+        nodes = []
+        if not results:
+            return jsonify({'success': False, 'message': 'No tools found in the database.'})
+
+        for row in results:
+            tool = row[0]
+            print(tool)
+            # Attempt to load as JSON, if it fails, treat it as plain text
+            try:
+                node = json.loads(tool)
+            except json.JSONDecodeError:
+                node = {
+                    "ID": tool,
+                    "name": tool,
+                    "level": 2
+                }
+            nodes.append(node)
+
+        # Create the structure for the first JSON file
+        tools_data = {
+            "nodes": nodes,
+            "links": []
+        }
+
+        # Write the first JSON data to Tools.json
+        with open('Tools.json', 'w') as json_file:
+            json.dump(tools_data, json_file, indent=4)
+
+        # Second SQL query for query and tool
+        querySQL = "SELECT DISTINCT query, tool FROM tbl_tool_def WHERE query IS NOT NULL"
+        cursor.execute(querySQL)
+
+        results = cursor.fetchall()
+        
+        nodes = []
+        if not results:
+            return jsonify({'success': False, 'message': 'No tools found in the database.'})
+
+        for row in results:
+            query = row[0]
+            tool = row[1]
+
+            print(tool)
+            try:
+                node = json.loads(tool)
+            except json.JSONDecodeError:
+                node = {
+                    "ID": query,
+                    "name": query,
+                    "level": 3,
+                    "Tool": tool
+                }
+            nodes.append(node)
+
+        # Create the structure for the second JSON file
+        planning_data = {
+            "nodes": nodes,
+            "links": []
+        }
+
+        # Write the second JSON data to Planungstool.json
+        with open('Planungstool.json', 'w') as json_file:
+            json.dump(planning_data, json_file, indent=4)
+    # Second SQL query for query and tool
+
+
+        querySQL = "SELECT DISTINCT query, tables FROM tbl_tool_def WHERE query IS NOT NULL"
+        cursor.execute(querySQL)
+
+        results = cursor.fetchall()
+        
+        nodes = []
+        if not results:
+            return jsonify({'success': False, 'message': 'No tools found in the database.'})
+
+        for row in results:
+            query = row[0]
+            names_string = row[1]
+
+            # Split the names into a list
+            names_list = names_string.split(';') if names_string else []
+
+            
+            try:
+                node = json.loads(tool)
+            except json.JSONDecodeError:
+                node = {
+                    "ID": query,
+                    "names": names_list,
+                    "level": 4
+                }
+            nodes.append(node)
+
+        # Create the structure for the second JSON file
+        planning_data = {
+            "nodes": nodes,
+            "links": []
+        }
+
+        # Write the second JSON data to Planungstool.json
+        with open('TableDefs.json', 'w') as json_file:
+            json.dump(planning_data, json_file, indent=4)
+
+        
+
+        return jsonify({'success': True, 'message': 'JSON files generated successfully.'})
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+    finally:
+        cursor.close()
+        conn.close()
 
 
 @app.route('/')
