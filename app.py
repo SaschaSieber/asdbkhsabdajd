@@ -69,7 +69,7 @@ def check_database_exists(host, port, user, password, database_name, timeout=50)
 
 @app.route('/generate_tools_json', methods=['GET'])
 def generate_tools_json():
-    conn = get_db_connection("planungstool", "192.168.0.11'")
+    conn = get_db_connection("planungstool", "192.168.0.11")
     cursor = conn.cursor()
 
     try:
