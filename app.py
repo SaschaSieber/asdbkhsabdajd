@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, send_from_directory, make_response, render_template ,session
+192.168.0.11'from flask import Flask, jsonify, request, send_from_directory, make_response, render_template ,session
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 import psycopg2
@@ -69,7 +69,7 @@ def check_database_exists(host, port, user, password, database_name, timeout=50)
 
 @app.route('/generate_tools_json', methods=['GET'])
 def generate_tools_json():
-    conn = get_db_connection("planungstool", "dbc95a5.online-server.cloud")
+    conn = get_db_connection("planungstool", "192.168.0.11'")
     cursor = conn.cursor()
 
     try:
