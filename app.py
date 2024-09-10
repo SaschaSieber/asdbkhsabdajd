@@ -4,6 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from psycopg2 import OperationalError
+import json
 
 app = Flask(__name__)
 
