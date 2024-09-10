@@ -271,7 +271,7 @@ def get_table_columns(table_name):
 @app.route('/uploadlogs/<table_name>', methods=['GET'])
 def get_upload_logs(table_name):
     try:
-        conn = get_db_connection("planungstool", "192.168.0.11")
+        conn = get_db_connection("gemeinsam", "192.168.0.11")
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         query = """
             SELECT username, timestampval
