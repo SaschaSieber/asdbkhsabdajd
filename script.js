@@ -873,69 +873,48 @@ function fetchDataJson() {
 
     async function searchTableInFourthLayer(table) {
         const foundNodes = [];
+        
     
-        try {
-            // Iterate through each node in the first level
-            const MainNodes = await d3.json('Function.json');
-            for (const node of MainNodes.nodes) {
-                if (node.level === 1) {
-                    const childData = await d3.json('Tools.json');
-                    // Filter children to only include those with an ID matching node.FollowUpNode
-                    const children = childData.nodes.filter(child => child.name === node.FollowUpNode);
+        // Iterate through the top-level nodes (level 1, equivalent to Function.json)
+        const children = toolsData.nodes;
+        
+        for (const childm of children) {
+            // Get grandchildren data from the respective planning tool data (equivalent to `${childm.name}.json`)
+            const grandchildMData = planningstoolData.nodes.filter(grandchild => grandchild.Tool === childm.name);
     
-                    for (const childm of children) {
-                        const grandchildMData = await d3.json(`${childm.name}.json`);
-                        const grandchilMdren = grandchildMData.nodes;
+            // Iterate through each child (level 2 node)
+            for (const child of grandchildMData) {
+                // Get table data (TableDefs.json equivalent)
+                const tableNodes = table_def_data.nodes.filter(tableNode => tableNode.ID === child.name);
+                
     
-                        // Iterate through each child (level 2 node)
-                        for (const child of grandchilMdren) {
-                            const tableData = await d3.json('TableDefs.json');
-                            const tableNodes = tableData.nodes.filter(tableNode => tableNode.ID === child.name);
+                for (const grandchild of tableNodes) {
+                    // The 'names' field is already a list, so no need to split
+                    const expandedNodes = grandchild.names.map(name => ({ ID: grandchild.ID, name: name.trim(), level: 4 }));
+                    
     
-                            for (const grandchild of tableNodes) {
-                                // Expand grandchild nodes by names array
-                                const expandedNodes = grandchild.names.map(name => ({ ID: grandchild.ID, name, level: 4 }));
+                    // Check if any expanded node matches the table name and add only matching nodes
+                    for (const expandedNode of expandedNodes) {
+                        if (expandedNode.name === table) { // Direct match rather than 'includes'
+                            // Only add the matching expandedNode
+                            foundNodes.push(expandedNode);
+                            console.log(expandedNodes);
     
-                                // Check if any expanded node matches the table name
-                                for (const expandedNode of expandedNodes) {
-                                    if (expandedNode.name.includes(table)) {
-                                        
-                                    
-                                        // Add the relevant nodes to foundNodes if not already added
-                                       
-                                        if (!foundNodes.some(foundNode => foundNode.ID === child.ID)) {
-                                            foundNodes.push(child);
-                                        }
-                                        if (!foundNodes.some(foundNode => foundNode.ID === childm.ID)) {
-                                            foundNodes.push(childm);
-                                        }
-                                        if (!foundNodes.some(foundNode => foundNode.ID === node.ID)) {
-                                            foundNodes.push(node);
-                                        }
-                                    }
-                                }
+                            // Add the relevant child and childm to foundNodes if not already added
+                            if (!foundNodes.some(foundNode => foundNode.ID === child.ID)) {
+                                // Optionally, push the parent if needed (commented out based on your original logic)
+                                // foundNodes.push(child);
+                            }
+                            if (!foundNodes.some(foundNode => foundNode.ID === childm.ID)) {
+                                foundNodes.push(childm);
                             }
                         }
                     }
                 }
             }
-        } catch (error) {
-            console.error('Error loading JSON data:', error);
         }
-        console.log(graphData)
-
-        if (graphData.nodes[0].level === 4) {
-            for (const node of graphData.nodes) {
-                if (node.name.some(name => name.includes(table))) {
-                    foundNodes.push(node);
-                }
-            }
-        }
-        
-        
-            
-        
     
+        // Return foundNodes containing only the relevant nodes
         return foundNodes;
     }
     
