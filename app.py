@@ -33,7 +33,7 @@ selected_db = None
 
 servers = [
     {"host": "192.168.0.11", "port": 5432, "user": "postgres", "password": "PgresPW#amotIQ"},
-    {"host": "9a8fdf0.online-server.cloud", "port": 5432, "user": "postgres", "password": "PgresPW#amotIQ"}
+    {"host": "192.168.0.12", "port": 5432, "user": "postgres", "password": "PgresPW#amotIQ"}
  
 ]
 def check_database_exists(host, port, user, password, database_name, timeout=50):
