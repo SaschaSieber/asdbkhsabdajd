@@ -69,7 +69,7 @@ def check_database_exists(host, port, user, password, database_name, timeout=50)
 
 @app.route('/generate_tools_json', methods=['GET'])
 def generate_tools_json():
-    conn = get_db_connection("planungstool", "192.168.0.11")
+    conn = get_db_connection("planungstool", "dbc95a5.online-server.cloud")
     cursor = conn.cursor()
 
     try:
@@ -104,16 +104,14 @@ def generate_tools_json():
         }
 
         # Write the first JSON data to Tools.json
-        with open('Tools.json', 'w') as json_file:
-            json.dump(tools_data, json_file, indent=4)
-
+        
         # Second SQL query for query and tool
         querySQL = "SELECT DISTINCT query, tool FROM tbl_tool_def WHERE query IS NOT NULL"
         cursor.execute(querySQL)
 
         results = cursor.fetchall()
         
-        nodes = []
+        nodes2 = []
         if not results:
             return jsonify({'success': False, 'message': 'No tools found in the database.'})
 
@@ -131,26 +129,22 @@ def generate_tools_json():
                     "level": 3,
                     "Tool": tool
                 }
-            nodes.append(node)
+            nodes2.append(node)
 
         # Create the structure for the second JSON file
-        planning_data = {
-            "nodes": nodes,
+        Planungstool_data = {
+            "nodes": nodes2,
             "links": []
         }
 
-        # Write the second JSON data to Planungstool.json
-        with open('Planungstool.json', 'w') as json_file:
-            json.dump(planning_data, json_file, indent=4)
-    # Second SQL query for query and tool
-
+       
 
         querySQL = "SELECT DISTINCT query, tables FROM tbl_tool_def WHERE query IS NOT NULL"
         cursor.execute(querySQL)
 
         results = cursor.fetchall()
         
-        nodes = []
+        nodes3 = []
         if not results:
             return jsonify({'success': False, 'message': 'No tools found in the database.'})
 
@@ -170,21 +164,25 @@ def generate_tools_json():
                     "names": names_list,
                     "level": 4
                 }
-            nodes.append(node)
+            nodes3.append(node)
 
         # Create the structure for the second JSON file
-        planning_data = {
-            "nodes": nodes,
+        table_def_data = {
+            "nodes": nodes3,
             "links": []
         }
 
-        # Write the second JSON data to Planungstool.json
-        with open('TableDefs.json', 'w') as json_file:
-            json.dump(planning_data, json_file, indent=4)
 
+        combined_data = {
+        "tools_data": tools_data,
+        "planningstool_data": Planungstool_data,
+        "table_def_data":table_def_data
+    }
+
+      
         
 
-        return jsonify({'success': True, 'message': 'JSON files generated successfully.'})
+        return jsonify(combined_data)
 
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
