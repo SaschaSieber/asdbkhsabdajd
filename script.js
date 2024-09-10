@@ -12,6 +12,26 @@
         ]
     };
 
+let toolsData = []; // Declare toolsData variable
+    let planningstoolData = []; // Declare planningstoolData variable
+    let table_def_data = []; // Declare table_def_data variable
+    window.onload = function() {
+        fetchDataJson();
+    };
+function fetchDataJson() {
+        fetch('/generate_tools_json') // Adjust the endpoint to your actual API
+            .then(response => response.json())
+            .then(data => {
+                toolsData = data.tools_data;
+                planningstoolData = data.planningstool_data;
+                table_def_data=data.table_def_data;
+                console.log(toolsData)
+                // Initialize the graph with the fetched tools data
+               
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
     document.getElementById("redirect-button").addEventListener("click", function() {
         window.location.href = "http://82.165.126.38:5000"; // Specify your desired link here
     });
