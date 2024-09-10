@@ -150,122 +150,79 @@ function fetchDataJson() {
             .on("click", function (event, d) {
                 
                 if (d.level === 0) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(graphData)) {
-                        graphDataStack.push({ nodes: graphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: graphData.links });
+                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(toolsData)) {
+                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
                     }
-                    console.log(d.ID)
-                    d3.json(`${d.ID}.json`).then(newData => {
-                        console.log('New graph data:', newData);
-                        // Set level for new nodes
-                        d3.select("svg").remove();
-                        updateGraph(newData);
-
-                        if(d.ID==="Tools"){
-                           /* highlightNodes(graphData.nodes, "#BE4917", false);*/
-                            setNodeColors(graphData.nodes);
-
-                        }
-                        else{
-                           
-                            setNodeColors(graphData.nodes);
-                        }
+                    console.log(d.ID);
+    
+                    // Use toolsData directly
+                    const newData = toolsData; // Replace this with relevant data as needed
+                    updateGraph(newData);
+                    setNodeColors(toolsData.nodes);
+                       
                         
-                    }).catch(error => {
-                        console.error('Error loading JSON:', error);
-                    });
+                    
                 }
 
                 
-                if (d.level === 1) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(graphData)) {
-                        graphDataStack.push({ nodes: graphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: graphData.links });
+                else if (d.level === 1) {
+                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(toolsData)) {
+                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
                     }
                     console.log(d.FollowUpNode);
-                
-                    d3.json(`Tools.json`).then(newData => {
-                        console.log('New graph data:', newData);
-                
-                        // Filter nodes to include only those with ID matching FollowUpNode
-                        const filteredNodes = newData.nodes.filter(node => node.name === d.FollowUpNode);
-                
-                        // Set the level for new nodes and create the new filtered data structure
-                        const filteredData = {
-                            nodes: filteredNodes.map(node => ({ ...node, level: 2 })),
-                            links: newData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
-                        };
-                
-                        // Remove existing SVG and update the graph with filtered data
-                        d3.select("svg").remove();
-                        updateGraph(filteredData);
-                        
-                        setNodeColors(graphData.nodes);
-                        
-                    }).catch(error => {
-                        console.error('Error loading JSON:', error);
-                    });
+    
+                    // Filter nodes based on FollowUpNode
+                    const filteredNodes = toolsData.nodes.filter(node => node.name === d.FollowUpNode);
+    
+                    const filteredData = {
+                        nodes: filteredNodes.map(node => ({ ...node, level: 2 })),
+                        links: toolsData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
+                    };
+    
+                    updateGraph(filteredData);
+                    setNodeColors(toolsData.nodes);
                 }
                 
-                else if(!event.ctrlKey && d.level === 2) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(graphData)) {
-                        graphDataStack.push({ nodes: graphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: graphData.links });
-                        }
-                        sendValueToBackend(d.name) 
-                        d3.json(`Planungstool.json`).then(newData => {
-                            console.log('New graph data:', newData);
-                            d3.select("svg").remove();
-                    
-                            // Filter nodes by ID and expand the names array
-                            const filteredNodes = newData.nodes.filter(node => node.Tool === d.name);
-                            // expandedNodes = filteredNodes.flatMap(node => node.names.map(name => ({ ID: node.ID, name, level: 4,Tool })));
-                    
-                            // Create the new filtered data structure
-                            const filteredData = {
-                                nodes: filteredNodes.map(node => ({ ...node, level: 3 })),
-                                links: newData.links.filter(link => 
-                                    filteredNodes.some(node => node.name === link.source || node.name === link.target))
-                            };
-                        updateGraph(filteredData);
-                        setNodeColors(graphData.nodes);
-                    }).catch(error => {
-                        console.error('Error loading JSON:', error);
-                    });
-                    
-                    
-                 }
+                else if (d.level === 2 && !event.ctrlKey) {
+                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(planningstoolData)) {
+                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
+                    }
+    
+                    // Filter nodes based on the clicked tool's name
+                    const filteredNodes = planningstoolData.nodes.filter(node => node.Tool === d.name);
+                    const filteredData = {
+                        nodes: filteredNodes.map(node => ({ ...node, level: 3 })),
+                        links: planningstoolData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
+                    };
+    
+                    updateGraph(filteredData);
+                    setNodeColors(planningstoolData.nodes);
+                }
                  else if(d.level===2& event.ctrlKey ){
                     console.log("test")
                     const link = document.createElement('a');
-                    link.href = `tool_info/${d.name}`;
-
+                    link.href = 'http://localhost:3000/tool_info/Planungstool';
                     link.target = '_blank'; 
                     link.click();
 
                  }
-                else if (d.level === 3) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(graphData)) {
-                        graphDataStack.push({ nodes: graphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: graphData.links });
+                 else if (d.level === 3) {
+                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(planningstoolData)) {
+                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
                     }
-                    d3.json(`TableDefs.json`).then(newData => {
-                        console.log('New graph data:', newData);
-                        d3.select("svg").remove();
-                
-                        // Filter nodes by ID and expand the names array
-                        console.log(newData)
-                        const filteredNodes = newData.nodes.filter(node => node.ID === d.name);
-                        const expandedNodes = filteredNodes.flatMap(node => node.names.map(name => ({ ID: node.ID, name, level: 4 })));
-                
-                        // Create the new filtered data structure
-                        const filteredData = {
-                            nodes: expandedNodes,
-                            links: newData.links.filter(link => expandedNodes.some(node => node.ID === link.source || node.ID === link.target))
-                        };
-                        
-                        updateGraph(filteredData);
-                       
-                        setNodeColors(graphData.nodes);
-                    }).catch(error => {
-                        console.error('Error loading JSON:', error);
-                    });
+    
+                    // Filter nodes based on the clicked name
+                    const filteredNodes = table_def_data.nodes.filter(node => node.ID === d.name);
+                    const expandedNodes = filteredNodes.flatMap(node => node.names.map(name => ({ ID: node.ID, name, level: 4 })));
+    
+                    const filteredData = {
+                        nodes: expandedNodes,
+                        links: planningstoolData.links.filter(link =>
+                            expandedNodes.some(node => node.ID === link.source || node.ID === link.target))
+                    };
+    
+                    updateGraph(filteredData);
+                    setNodeColors(table_def_data.nodes);
                 }
                 else if (d.level === 4){
                     populateSidebar(d);
