@@ -11,13 +11,12 @@
         
         ]
     };
-
 let toolsData = []; // Declare toolsData variable
-    let planningstoolData = []; // Declare planningstoolData variable
-    let table_def_data = []; // Declare table_def_data variable
-    window.onload = function() {
-        fetchDataJson();
-    };
+let planningstoolData = []; // Declare planningstoolData variable
+let table_def_data = []; // Declare table_def_data variable
+document.addEventListener('DOMContentLoaded', function () {
+    fetchDataJson();
+});
 function fetchDataJson() {
         fetch('/generate_tools_json') // Adjust the endpoint to your actual API
             .then(response => response.json())
