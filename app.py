@@ -1,4 +1,4 @@
-192.168.0.11'from flask import Flask, jsonify, request, send_from_directory, make_response, render_template ,session
+from flask import Flask, jsonify, request, send_from_directory, make_response, render_template ,session
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 import psycopg2
