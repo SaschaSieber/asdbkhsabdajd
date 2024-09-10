@@ -99,24 +99,25 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- Custom JavaScript -->
 <script>
-    document.getElementById('update-json-button').addEventListener('click', function() {
-            // Make a request to the Flask endpoint to update JSON files
-            fetch('/generate_tools_json')
-                .then(response => response.json())
-                .then(data => {
-                    // Display success or error message
-                    const messageDiv = document.getElementById('message');
-                    if (data.success) {
-                        messageDiv.innerText = 'JSON Dateien wurden erfolgreich aktualisiert!';
-                    } else {
-                        messageDiv.innerText = 'Fehler: ' + data.message;
-                    }
-                })
-                .catch(error => {
-                    const messageDiv = document.getElementById('message');
-                    messageDiv.innerText = 'Fehler bei der Anfrage: ' + error;
-                });
-        });
+           let toolsData = []; // Declare toolsData variable
+let planningstoolData = []; // Declare planningstoolData variable
+let table_def_data = [];
+        document.addEventListener('DOMContentLoaded', function () {
+    fetchDataJson();
+});
+function fetchDataJson() {
+    fetch('/generate_tools_json') // Adjust the endpoint to your actual API
+        .then(response => response.json())
+        .then(data => {
+            toolsData = data.tools_data;
+            planningstoolData = data.planningstool_data;
+            table_def_data=data.table_def_data;
+            console.log(toolsData)
+            // Initialize the graph with the fetched tools data
+           
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
 </script>
 <script type="module" src="script.js"></script>
 </body>
