@@ -34,7 +34,7 @@ function fetchDataJson() {
 
 
     document.getElementById("redirect-button").addEventListener("click", function() {
-        window.location.href = "a11ccbd.online-server.cloud:5000"; // Specify your desired link here
+        window.location.href = "http://a11ccbd.online-server.cloud:5000"; // Specify your desired link here
     });
 
     function setNodeColors(nodes) {
