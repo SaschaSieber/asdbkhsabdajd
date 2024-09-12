@@ -596,45 +596,28 @@ function fetchDataJson() {
 
 
 
-    async function searchNodeByID(query) {
-        const foundNodes = [];
-        let OldGraphData= graphData
-        let grandchildMData, tableData;
+   async function searchNodeByID(query) {
+    const foundNodes = [];
+    let OldGraphData = graphData;
     
-        
-        
-                grandchildMData = await d3.json('Planungstool.json');
-                const grandchilMdren = grandchildMData.nodes;
-                for (const child of grandchilMdren) {
-                    if(child.name.toLowerCase().includes(query))
-                        foundNodes.push(child.Tool);
-                        console.log(query)
-                    }
-                    
-                
-            
-    
-            if (foundNodes.length === 0) {
-              
-                
-       
-             
-                // Assuming updateGraph function is defined elsewhere
-            }
-           
+    // Assuming planningtoolData is already globally defined
+    const grandchilMdren = planningstoolData.nodes; // use global variable directly
 
-            else if(foundNodes.length >0){
-                const newData = await d3.json('Tools.json');
-                const toolsData = await d3.json('Planungstool.json');
-        
-                d3.select("svg").remove();
-        
-                // Filter nodes in Tools.json based on foundNodes
-                // Filter nodes in Tools.json based on foundNodes
-        const filteredNodes = newData.nodes.filter(node => foundNodes.includes(node.ID));
-        
-        // Filter nodes in Plannungstool.json based on Tool
-        const filteredAbf = toolsData.nodes.filter(node => foundNodes.includes(node.Tool));
+    // Search nodes in planningtoolData based on query
+    for (const child of grandchilMdren) {
+        if (child.name.toLowerCase().includes(query)) {
+            foundNodes.push(child.Tool);
+        }
+    }
+
+    if (foundNodes.length === 0) {
+        // Handle no results case
+    } else {
+        // Use global ToolsData directly instead of redeclaring
+        const filteredNodes = toolsData.nodes.filter(node => foundNodes.includes(node.ID));
+
+        // Filter nodes in planningtoolData based on Tool
+        const filteredAbf = planningstoolData.nodes.filter(node => foundNodes.includes(node.Tool));
 
         // Combine filteredNodes and filteredAbf, removing duplicates
         const combinedNodes = [
@@ -642,58 +625,41 @@ function fetchDataJson() {
             ...filteredAbf.map(node => ({ ...node, level: 3, type: 'otherNode' }))
         ];
 
-        // Combine links from both datasets
-       
-        console.log(filteredAbf)
-        console.log(filteredNodes)
-        // Add dynamic edges between filteredNode and all filteredAbf nodes
-      // Create a map to store unique links
-      const uniqueLinks = new Map();
-
-      // Add dynamic edges between filteredNode and all filteredAbf nodes
-      filteredNodes.forEach(filteredNode => {
-          filteredAbf.forEach(filteredAbfNode => {
-              // Condition to link nodes based on ID and Tool
-              if (filteredNode.ID === filteredAbfNode.Tool) {
-                  // Generate a unique key for the link
-                  const linkKey = `${filteredNode.ID}-${filteredAbfNode.ID}`;
-                  // Add to the map only if the key doesn't exist
-                  if (!uniqueLinks.has(linkKey)) {
-                      uniqueLinks.set(linkKey, { source: filteredNode.ID, target: filteredAbfNode.ID });
-                  }
-              }
-          });
-      });
-
-      // Convert map values to array of links
-      const combinedLinks = Array.from(uniqueLinks.values());
-
-      // Create the new filtered data structure
-      const filteredData = {
-          nodes: combinedNodes,
-          links: combinedLinks
-      };
-
-
-        
-                if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(OldGraphData)) {
-                    graphDataStack.push({ nodes: OldGraphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: OldGraphData.links });
+        // Create unique links between filteredNodes and filteredAbf
+        const uniqueLinks = new Map();
+        filteredNodes.forEach(filteredNode => {
+            filteredAbf.forEach(filteredAbfNode => {
+                if (filteredNode.ID === filteredAbfNode.Tool) {
+                    const linkKey = `${filteredNode.ID}-${filteredAbfNode.ID}`;
+                    if (!uniqueLinks.has(linkKey)) {
+                        uniqueLinks.set(linkKey, { source: filteredNode.ID, target: filteredAbfNode.ID });
+                    }
                 }
-                console.log("here")
-                console.log(OldGraphData)
-        
-                updateGraph(filteredData);
-                highlightNodes(filteredNodes, "#BE4917", false); // Highlights nodes in filteredNodes with red color, does not change other nodes to white
+            });
+        });
 
-                highlightNodes(filteredAbf, "#20548F", false);
+        const combinedLinks = Array.from(uniqueLinks.values());
 
-                const searchedNodes = grandchilMdren.filter(node => node.name.toLowerCase().includes(query));
+        // Prepare filtered data structure
+        const filteredData = {
+            nodes: combinedNodes,
+            links: combinedLinks
+        };
 
-                // Highlight all searched nodes
-                highlightNodes(searchedNodes, "#ff0000", false);
+        // Update graph if necessary
+        if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(OldGraphData)) {
+            graphDataStack.push({ nodes: OldGraphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: OldGraphData.links });
+        }
 
-            } 
+        // Update the graph and highlight nodes
+        updateGraph(filteredData);
+        highlightNodes(filteredNodes, "#BE4917", false); // Highlight in red
+        highlightNodes(filteredAbf, "#20548F", false); // Highlight in blue
+
+        const searchedNodes = grandchilMdren.filter(node => node.name.toLowerCase().includes(query));
+        highlightNodes(searchedNodes, "#ff0000", false); // Highlight searched nodes in red
     }
+}
 
 
 
@@ -829,52 +795,134 @@ function fetchDataJson() {
 
 
 
-    async function searchTableInFourthLayer(table) {
-        const foundNodes = [];
-        
     
-        // Iterate through the top-level nodes (level 1, equivalent to Function.json)
-        const children = toolsData.nodes;
-        
-        for (const childm of children) {
-            // Get grandchildren data from the respective planning tool data (equivalent to `${childm.name}.json`)
-            const grandchildMData = planningstoolData.nodes.filter(grandchild => grandchild.Tool === childm.name);
-    
-            // Iterate through each child (level 2 node)
-            for (const child of grandchildMData) {
-                // Get table data (TableDefs.json equivalent)
-                const tableNodes = table_def_data.nodes.filter(tableNode => tableNode.ID === child.name);
-                
-    
-                for (const grandchild of tableNodes) {
-                    // The 'names' field is already a list, so no need to split
-                    const expandedNodes = grandchild.names.map(name => ({ ID: grandchild.ID, name: name.trim(), level: 4 }));
-                    
-    
-                    // Check if any expanded node matches the table name and add only matching nodes
-                    for (const expandedNode of expandedNodes) {
-                        if (expandedNode.name === table) { // Direct match rather than 'includes'
-                            // Only add the matching expandedNode
-                            foundNodes.push(expandedNode);
-                            console.log(expandedNodes);
-    
-                            // Add the relevant child and childm to foundNodes if not already added
-                            if (!foundNodes.some(foundNode => foundNode.ID === child.ID)) {
-                                // Optionally, push the parent if needed (commented out based on your original logic)
-                                // foundNodes.push(child);
-                            }
-                            if (!foundNodes.some(foundNode => foundNode.ID === childm.ID)) {
-                                foundNodes.push(childm);
-                            }
+async function searchTableInFourthLayer(searchString) {
+    const foundNodes = [];
+    let OldGraphData = graphData; // Track the old graph data for comparison
+    const level4Nodes = []; // Array to hold level 4 nodes that match the search
+
+    // Ensure toolsData and its nodes are defined
+    if (!toolsData || !toolsData.nodes) {
+        console.error("toolsData or toolsData.nodes is undefined");
+        return;
+    }
+
+    // Ensure planningstoolData and its nodes are defined
+    if (!planningstoolData || !planningstoolData.nodes) {
+        console.error("planningstoolData or planningstoolData.nodes is undefined");
+        return;
+    }
+
+    // Iterate through the top-level nodes (level 1, equivalent to ToolsData)
+    const children = toolsData.nodes;
+
+    for (const childm of children) {
+        // Get grandchildren data from the respective planning tool data
+        const grandchildMData = planningstoolData.nodes.filter(grandchild => grandchild.Tool === childm.name);
+
+        for (const child of grandchildMData) {
+            // Get table data from table_def_data
+            if (!table_def_data || !table_def_data.nodes) {
+                console.error("table_def_data or table_def_data.nodes is undefined");
+                return;
+            }
+            const tableNodes = table_def_data.nodes.filter(tableNode => tableNode.ID === child.name);
+
+            for (const grandchild of tableNodes) {
+                const expandedNodes = grandchild.names
+                    .filter(name => name.trim() === searchString) // Only keep names that match the searchString
+                    .map(name => ({ ID: grandchild.ID, name: name.trim(), level: 4 }));
+
+                for (const expandedNode of expandedNodes) {
+                    console.log(expandedNode);
+
+                    // Check if the expanded node matches the searchString
+                    if (expandedNode.name === searchString) {
+                        foundNodes.push(expandedNode);
+
+                        // Add the childm (tool) node if it's not already added
+                        if (!foundNodes.some(foundNode => foundNode.ID === childm.ID)) {
+                            foundNodes.push(childm);
                         }
                     }
+
+                    // Always add matching expandedNode to level4Nodes
+                    level4Nodes.push(expandedNode);
                 }
             }
         }
-    
-        // Return foundNodes containing only the relevant nodes
-        return foundNodes;
     }
+
+    // If no results found, handle the case
+    if (foundNodes.length === 0) {
+        console.log("No matching table found");
+    } else {
+        // Filter nodes in toolsData based on foundNodes (tools and matching tables)
+        const filteredNodes = toolsData.nodes.filter(node => foundNodes.some(foundNode => foundNode.ID === node.ID) && node.level === 2);
+
+        // Filter nodes in planningstoolData based on Tool
+        const filteredAbf = planningstoolData.nodes.filter(node => foundNodes.some(foundNode => foundNode.ID === node.Tool));
+
+        // Combine filteredNodes and filteredAbf, ensuring level 4 nodes are only the matched ones
+        const combinedNodes = [
+            ...filteredNodes.map(node => ({ ...node, level: 2, type: 'filteredNode' })),
+            ...filteredAbf.map(node => ({ ...node, level: 3, type: 'otherNode' })),
+
+            //...level4Nodes // Only include matching level 4 nodes
+        ];
+        console.log(level4Nodes)
+
+        // Create unique links
+        const uniqueLinks = new Map();
+
+        
+        // Links between tools (level 2) and queries (level 3)
+      filteredNodes.forEach(filteredNode => {
+        // Iterate over each level 3 node
+        filteredAbf.forEach(level3Node => {
+            // Link if tool matches
+            if (filteredNode.ID === level3Node.Tool) {
+                const linkKey = `${filteredNode.ID}-${level3Node.ID}`;
+                
+                if (!uniqueLinks.has(linkKey)) {
+                    
+                
+                    uniqueLinks.set(linkKey, { source: filteredNode.ID, target: level3Node.ID });
+                }
+            }
+        });
+    });
+
+
+    
+
+
+
+
+    
+        const combinedLinks = Array.from(uniqueLinks.values());
+        
+
+        // Create the filtered data structure
+        const filteredData = {
+            nodes: combinedNodes,
+            links: combinedLinks
+        };
+
+        // Update the graph if the current graph is different from the new one
+        if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(OldGraphData)) {
+            graphDataStack.push({ nodes: OldGraphData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: OldGraphData.links });
+        }
+
+        // Update the graph with the filtered data
+        updateGraph(filteredData);
+
+        // Highlight the found nodes (tools, tables) with different colors if desired
+        highlightNodes(filteredNodes, "#BE4917", false); // Highlight tools in red
+        highlightNodes(filteredAbf, "#FFFFFF", false); // Highlight tables in blue
+        highlightNodes(level4Nodes, "#FF0000", false); // Highlight matched level 4 nodes in green
+    }
+}
     
 
 
