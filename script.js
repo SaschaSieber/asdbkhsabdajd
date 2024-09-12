@@ -727,7 +727,7 @@ function fetchDataJson() {
             if (searchQuery.startsWith('tbl_')) {
                 const foundNodes = await searchTableInFourthLayer(searchQuery);
             
-                highlightNodes(foundNodes);
+               // highlightNodes(foundNodes);
             } else if (searchQuery.startsWith('abf_')) {
                 searchNodeByID(searchQuery);
 
