@@ -70,7 +70,7 @@ def check_database_exists(host, port, user, password, database_name, timeout=50)
 
 @app.route('/generate_tools_json', methods=['GET'])
 def generate_tools_json():
-    conn = get_db_connection("planungstool", "dbc95a5.online-server.cloud")
+    conn = get_db_connection("planungstool", "192.168.0.11")
     cursor = conn.cursor()
 
     try:
@@ -173,45 +173,11 @@ def generate_tools_json():
             "links": []
         }
 
-        querySQL = "SELECT DISTINCT Funktion,Tool FROM tbl_tool_def WHERE query IS NOT NULL"
-        cursor.execute(querySQL)
-
-        results = cursor.fetchall()
-        
-        nodes4 = []
-        if not results:
-            return jsonify({'success': False, 'message': 'No tools found in the database.'})
-
-        for row in results:
-            Funktion = row[0]
-            Tool = row[1]
-
-            # Split the names into a list
-            #names_list = names_string.split(';') if names_string else []
-
-            
-            try:
-                node = json.loads(tool)
-            except json.JSONDecodeError:
-                node = {
-                    "ID": Funktion,
-                    "FollowUpNode": Tool,
-                    "level": 1
-                }
-            nodes4.append(node)
-
-        # Create the structure for the second JSON file
-        function_def_data = {
-            "nodes": nodes4,
-            "links": []
-        }
-
 
         combined_data = {
         "tools_data": tools_data,
         "planningstool_data": Planungstool_data,
-        "table_def_data":table_def_data,
-        "function_def_data":function_def_data
+        "table_def_data":table_def_data
     }
 
       
