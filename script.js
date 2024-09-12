@@ -25,6 +25,7 @@ function fetchDataJson() {
             toolsData = data.tools_data;
             planningstoolData = data.planningstool_data;
             table_def_data=data.table_def_data;
+            function_def_data=data.function_def_data;
             console.log(toolsData)
             // Initialize the graph with the fetched tools data
            
@@ -101,134 +102,146 @@ function fetchDataJson() {
     let graphDataStack = [];
     let simulation;
 
-    function updateGraph(data) {
-        graphData = data;
-        if (simulation) {
-            simulation.stop();
+   
+                 
+               
+function updateGraph(data) {
+    graphData = data;
+    if (simulation) {
+        simulation.stop();
+    }
+
+    const graphContainer = document.getElementById('graph');
+    const width = graphContainer.clientWidth;
+    const height = graphContainer.clientHeight;
+
+    d3.select("svg").remove();
+
+    const svg = d3.select("#graph").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        
+        .call(d3.zoom().on("zoom", function (event) {
+            svg.attr("transform", event.transform);
+        }))
+        .append("g");
+        if (!simulation) {
+    simulation = d3.forceSimulation(data.nodes)
+        .force("link", d3.forceLink(data.links).id(d => d.ID).distance(100))
+        .force("charge", d3.forceManyBody().strength(-100))
+        .force("center", d3.forceCenter(width / 2, height / 2));
         }
+        const color = node => node.type === 'filteredNode' ? 'red' : 'green';
+        simulation.nodes(data.nodes);
+    simulation.force("link").links(data.links);
 
-        const graphContainer = document.getElementById('graph');
-        const width = graphContainer.clientWidth;
-        const height = graphContainer.clientHeight;
+    const link = svg.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(data.links)
+        .enter().append("line")
+        .attr("stroke-width", 2);
 
-        d3.select("svg").remove();
-
-        const svg = d3.select("#graph").append("svg")
-            .attr("width", width)
-            .attr("height", height)
+    const node = svg.append("g")
+        .attr("class", "nodes")
+        .selectAll("circle")
+        .data(data.nodes)
+        .enter().append("circle")
+        .attr("r", 10)
+        .attr("fill", "#fff")
+        
+        .attr("stroke", "#000")
+        .attr("stroke-width", 1.5)
+        .on("click", function (event, d) {
             
-            .call(d3.zoom().on("zoom", function (event) {
-                svg.attr("transform", event.transform);
-            }))
-            .append("g");
-            if (!simulation) {
-        simulation = d3.forceSimulation(data.nodes)
-            .force("link", d3.forceLink(data.links).id(d => d.ID).distance(100))
-            .force("charge", d3.forceManyBody().strength(-100))
-            .force("center", d3.forceCenter(width / 2, height / 2));
-            }
-            const color = node => node.type === 'filteredNode' ? 'red' : 'green';
-            simulation.nodes(data.nodes);
-        simulation.force("link").links(data.links);
+            if (d.level === 0) {
+                if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(toolsData)) {
+                    //graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
+                }
+                console.log(d.ID);
 
-        const link = svg.append("g")
-            .attr("class", "links")
-            .selectAll("line")
-            .data(data.links)
-            .enter().append("line")
-            .attr("stroke-width", 2);
-
-        const node = svg.append("g")
-            .attr("class", "nodes")
-            .selectAll("circle")
-            .data(data.nodes)
-            .enter().append("circle")
-            .attr("r", 10)
-            .attr("fill", "#fff")
-            
-            .attr("stroke", "#000")
-            .attr("stroke-width", 1.5)
-            .on("click", function (event, d) {
-                
-                if (d.level === 0) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(toolsData)) {
-                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
-                    }
-                    console.log(d.ID);
-    
-                    // Use toolsData directly
-                    const newData = toolsData; // Replace this with relevant data as needed
+                if(d.ID==="Tools"){
+                    const newData = toolsData; 
+                updateGraph(newData);
+                setNodeColors(toolsData.nodes);
+                }
+                else{
+                    const newData = function_def_data; 
                     updateGraph(newData);
-                    setNodeColors(toolsData.nodes);
-                       
-                        
+                setNodeColors(function_def_data.nodes);
+                console.log(newData)
+
+                }
+                
+                   
                     
-                }
-
                 
-                else if (d.level === 1) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(toolsData)) {
-                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
-                    }
-                    console.log(d.FollowUpNode);
-    
-                    // Filter nodes based on FollowUpNode
-                    const filteredNodes = toolsData.nodes.filter(node => node.name === d.FollowUpNode);
-    
-                    const filteredData = {
-                        nodes: filteredNodes.map(node => ({ ...node, level: 2 })),
-                        links: toolsData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
-                    };
-    
-                    updateGraph(filteredData);
-                    setNodeColors(toolsData.nodes);
-                }
-                
-                else if (d.level === 2 && !event.ctrlKey) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(planningstoolData)) {
-                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
-                    }
-    
-                    // Filter nodes based on the clicked tool's name
-                    const filteredNodes = planningstoolData.nodes.filter(node => node.Tool === d.name);
-                    const filteredData = {
-                        nodes: filteredNodes.map(node => ({ ...node, level: 3 })),
-                        links: planningstoolData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
-                    };
-    
-                    updateGraph(filteredData);
-                    setNodeColors(planningstoolData.nodes);
-                }
-                 else if(d.level===2& event.ctrlKey ){
-                    console.log("test")
-                    const link = document.createElement('a');
-                    link.href = 'http://localhost:3000/tool_info/Planungstool';
-                    link.target = '_blank'; 
-                    link.click();
+            }
 
-                 }
-                 else if (d.level === 3) {
-                    if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(planningstoolData)) {
-                        graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
-                    }
-    
-                    // Filter nodes based on the clicked name
-                    const filteredNodes = table_def_data.nodes.filter(node => node.ID === d.name);
-                    const expandedNodes = filteredNodes.flatMap(node => node.names.map(name => ({ ID: node.ID, name, level: 4 })));
-    
-                    const filteredData = {
-                        nodes: expandedNodes,
-                        links: planningstoolData.links.filter(link =>
-                            expandedNodes.some(node => node.ID === link.source || node.ID === link.target))
-                    };
-    
-                    updateGraph(filteredData);
-                    setNodeColors(table_def_data.nodes);
+            
+            else if (d.level === 1) {
+                if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(toolsData)) {
+                   // graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
                 }
-                else if (d.level === 4){
-                    populateSidebar(d);
+                console.log(d.FollowUpNode);
 
+                // Filter nodes based on FollowUpNode
+                const filteredNodes = toolsData.nodes.filter(node => node.name === d.FollowUpNode);
+
+                const filteredData = {
+                    nodes: filteredNodes.map(node => ({ ...node, level: 2 })),
+                    links: toolsData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
+                };
+
+                updateGraph(filteredData);
+                setNodeColors(toolsData.nodes);
+            }
+            
+            else if (d.level === 2 && !event.ctrlKey) {
+                if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(planningstoolData)) {
+                    graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
                 }
+
+                // Filter nodes based on the clicked tool's name
+                const filteredNodes = planningstoolData.nodes.filter(node => node.Tool === d.name);
+                const filteredData = {
+                    nodes: filteredNodes.map(node => ({ ...node, level: 3 })),
+                    links: planningstoolData.links.filter(link => filteredNodes.some(node => node.name === link.source || node.name === link.target))
+                };
+
+                updateGraph(filteredData);
+                setNodeColors(planningstoolData.nodes);
+            }
+             else if(d.level===2& event.ctrlKey ){
+                console.log("test")
+                const link = document.createElement('a');
+                link.href = 'http://localhost:3000/tool_info/Planungstool';
+                link.target = '_blank'; 
+                link.click();
+
+             }
+             else if (d.level === 3) {
+                if (graphDataStack.length === 0 || JSON.stringify(graphDataStack[graphDataStack.length - 1]) !== JSON.stringify(planningstoolData)) {
+                    graphDataStack.push({ nodes: toolsData.nodes.map(d => ({ ...d, fx: d.x, fy: d.y })), links: toolsData.links });
+                }
+
+                // Filter nodes based on the clicked name
+                const filteredNodes = table_def_data.nodes.filter(node => node.ID === d.name);
+                const expandedNodes = filteredNodes.flatMap(node => node.names.map(name => ({ ID: node.ID, name, level: 4 })));
+
+                const filteredData = {
+                    nodes: expandedNodes,
+                    links: planningstoolData.links.filter(link =>
+                        expandedNodes.some(node => node.ID === link.source || node.ID === link.target))
+                };
+
+                updateGraph(filteredData);
+                setNodeColors(table_def_data.nodes);
+            }
+            else if (d.level === 4){
+                populateSidebar(d);
+
+            }
                 event.stopPropagation();
             });
             simulation.alpha(1).restart();
