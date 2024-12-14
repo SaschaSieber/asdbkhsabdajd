@@ -714,7 +714,7 @@ document.getElementById('search-button').addEventListener('click', async functio
 
         }
         else{
-            SearchFunction(searchQuery);
+            searchToolByID(searchQuery);
 
         }
     }
