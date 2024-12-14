@@ -196,6 +196,7 @@ def generate_tools_json():
             except json.JSONDecodeError:
                 node = {
                     "ID": Funktion,
+                    "name": Funktion,
                     "FollowUpNode": Tool,
                     "level": 1
                 }
