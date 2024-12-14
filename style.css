@@ -16,7 +16,7 @@ body {
 .top-right-entity {
     position: absolute;
     top: 10px;
-    right: 420px;
+    right: 500px;
     background-color: #ffffff; /* Changed to white for a cleaner look */
     padding: 15px; /* Increased padding for better spacing */
     border: 1px solid #ddd; /* Lighter border color */
@@ -42,7 +42,7 @@ body {
 
 }
 .sidebar {
-    width: 400px; /* Adjust width as needed */
+    width: 450px; /* Adjust width as needed */
     background-color: #ffffff; /* Example background color */
     padding: 10px;
     
@@ -68,6 +68,21 @@ body {
     justify-content: space-between;
     border-bottom: 1px solid #aaa;
     border-radius: 4px;
+}
+
+.sidebar-header .column {
+    flex: 1; /* Allocate space proportional to the parent */
+    text-align: left; /* Align text to the left */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Prevent content overflow */
+    text-overflow: ellipsis; /* Show "..." if content is too long */
+    margin-left: 50px;
+}
+
+.sidebar-header .type {
+    flex: 0 0 100px; /* Fixed width for "Type" */
+    text-align: left; /* Align text to the left */
+    margin-right: 50px; /* Add a gap between "Column" and "Type" */
 }
 
 #sidebarImageContainer {
@@ -96,10 +111,30 @@ body {
    
 }
 
-.sidebar-header span {
-    flex: 1;
-    text-align: center;
+
+#sidebar .list-item {
+    display: flex; /* Ensure alignment in a row */
+    align-items: center; /* Center items vertically */
+    gap: 5px; /* Add uniform spacing between items */
+    padding: 5px 0; /* Minimal vertical padding */
 }
+
+
+#sidebar .type {
+    flex-shrink: 0; /* Prevent shrinking */
+    text-align: right; /* Align text to the right */
+    padding-left: 10px; /* Add spacing from the column */
+}
+
+
+
+.sidebar-header span {
+    flex: 1; /* Match the column flex settings */
+    text-align: center;
+    padding: 0;
+    margin-right: 5px;
+}
+
 
 .list-item {
     padding: 10px;
@@ -110,14 +145,20 @@ body {
 }
 
 .column {
-    flex: 1;
-    text-align: left; 
+    flex: 1; /* Allow the column to take up remaining space */
+    max-width: 70%; /* Constrain the width to 70% of the parent */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add "..." for overflowing text */
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 .type {
-    flex-shrink: 0;
-    padding-left: 20px; /* Adjust as needed */
+    flex-shrink: 0; /* Prevent the type from shrinking */
+    max-width: 30%; /* Constrain the width to 30% of the parent */
+    text-align: left;
+    margin-right: 50px
 }
+
 
 /* Firefox scrollbar customization */
 .sidebar {
@@ -160,6 +201,9 @@ circle {
     padding: 10px;
     border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
+    position: absolute; /* Ensure it uses absolute positioning */
+    left: 20px; /* Adjust this to control the distance from the left edge */
+    top: 50px; /* Optional: Adjust its vertical position */
 }
 
 #additional-info h2 {
