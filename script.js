@@ -212,7 +212,7 @@ function updateGraph(data) {
              else if(d.level===2& event.ctrlKey ){
                 console.log("test")
                 const link = document.createElement('a');
-                link.href = 'http://localhost:3000/tool_info/Planungstool';
+                link.href = 'http://82.165.126.38:3000/tool_info/Planungstool';
                 link.target = '_blank'; 
                 link.click();
 
@@ -284,7 +284,7 @@ function handleCtrlClickOnLevel2Node(node) {
 async function fetchData(d) {
     try {
 
-        let response = await fetch(`http://localhost:3000/table/${encodeURIComponent(d.name)}`);
+        let response = await fetch(`http://82.165.126.38:3000/table/${encodeURIComponent(d.name)}`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -327,7 +327,7 @@ function sendValueToBackend(selectedValue) {
 
 async function FetToolsInfo(d) {
     try {
-        let response = await fetch(`http://localhost:3000/tool_info/${d.name}`);
+        let response = await fetch(`http://82.165.126.38:3000/tool_info/${d.name}`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -347,7 +347,7 @@ async function FetToolsInfo(d) {
 
 async function fetchLogs(d) {
     try {
-        let response = await fetch(`http://localhost:3000/uploadlogs/${d.name}`);
+        let response = await fetch(`http://82.165.126.38:3000/uploadlogs/${d.name}`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -395,55 +395,59 @@ async function populateSidebar(d) {
     let header = document.createElement('div');
 
 
-        
-        header.classList.add('sidebar-header');
-        header.innerHTML = '<span style="white-space: pre;">Column                Type</span>';
-
-        sidebar.appendChild(header);
+   
+    header.classList.add('sidebar-header');
+    header.innerHTML = `
+        <span class="column">Column</span>
+        <span class="type">Type</span>
+    `;
+    sidebar.appendChild(header);
+    
         // Create a document fragment to build the sidebar content
         let fragment = document.createDocumentFragment();
 
         let maxColumnWidth = 0;
         console.log('Fetched table data:', tableData);
         // Calculate max column width
-        tableData.forEach(row => {
-            for (const key in row) {
-                let tempSpan = document.createElement('span');
-                tempSpan.className = 'column'; 
-                tempSpan.textContent = key; 
-                fragment.appendChild(tempSpan);
+// Populate sidebar with list items
+tableData.forEach(row => {
+    let listItem = document.createElement('div');
+    listItem.classList.add('list-item');
 
-                let columnWidth = tempSpan.offsetWidth;
-                maxColumnWidth = Math.max(maxColumnWidth, columnWidth);
-            }
-        });
-        // Append all column headers to fragment
-        fragment.querySelectorAll('.column').forEach(tempSpan => {
-            fragment.removeChild(tempSpan); 
-        });
+    let rowHtml = '';
+    for (const key in row) {
+        let cleanKey = key.replace('column_name', '').replace('data_type', '').trim();
+        let cleanValue = row[key].replace('data_type', '').trim();
+
+        // Align columns and types using spans
+        rowHtml += `<span class="type">${cleanValue}</span>`;
+    }
+
+    listItem.innerHTML = rowHtml;
+    fragment.appendChild(listItem);
+});
+
 
         // Populate sidebar with list items
-        tableData.forEach(row => {
-            let listItem = document.createElement('div');
-            listItem.classList.add('list-item');
+        // Populate sidebar with list items
+tableData.forEach(row => {
+    let listItem = document.createElement('div');
+    listItem.classList.add('list-item');
 
-            let rowHtml = '';
-            for (const key in row) {
-            
-                let cleanKey = key.replace('column_name', '');
-                cleanKey = cleanKey.replace('data_type', '');
-                let cleanKey2 = row[key].replace('data_type', '');
-                rowHtml += `<span class="column">${cleanKey}</span><span class="type">${cleanKey2}</span>`;
+    // Ensure each column name and type are aligned
+    let columnName = document.createElement('span');
+    columnName.classList.add('column');
+    columnName.textContent = row.column_name; // Replace with your data's column name key
 
-                    //</span><span class="type">${row[key]}</span>`;
-                
-                
-        
-            }
-            listItem.innerHTML = rowHtml;
+    let columnType = document.createElement('span');
+    columnType.classList.add('type');
+    columnType.textContent = row.data_type; // Replace with your data's type key
 
-            fragment.appendChild(listItem);
-        });
+    listItem.appendChild(columnName);
+    listItem.appendChild(columnType);
+    fragment.appendChild(listItem);
+});
+
 
         sidebar.appendChild(fragment);
 
@@ -457,28 +461,7 @@ async function populateSidebar(d) {
         
         if (sidebarImageContainer) {
           
-            sidebarImageContainer.innerHTML = '';
-
-            // Check if the link element already exists
-            var existingLink = document.getElementById('sidebar-link');
-           
-                // Create the link element
-                var link = document.createElement('a');
-                link.href = `http://localhost:3000/view_table/${d.name}`;
-                link.target = '_blank'; 
-                link.id = 'sidebar-link';
-
-                // Create the image element
-                var img = document.createElement('img');
-                img.src = 'tablePic.svg';
-                img.alt = 'Logo';
-
-              
-                link.appendChild(img);
-
-             
-                sidebarImageContainer.appendChild(link);
-            
+      
 
             
             sidebarImageContainer.style.display = 'block';
@@ -489,34 +472,7 @@ async function populateSidebar(d) {
         
        
           
-            SidebarImagePG.innerHTML = '';
-
-            // Check if the link element already exists
-            var existingLink = document.getElementById('sidebar-link');
-           
-                // Create the link element
-                var link = document.createElement('a');
-                link.href = `https://www.pgadmin.org/`;
-                
-                link.target = '_blank'; 
-                link.id = 'sidebar-link';
-
-                // Create the image element
-                var img = document.createElement('img');
-                img.src = 'pgadmin_94126.png';
-                img.alt = 'Logo';
-
-              
-                link.appendChild(img);
-
-             
-                SidebarImagePG.appendChild(link);
-            
-
-            
-            SidebarImagePG.style.display = 'block';
-      
-        
+            SidebarImagePG.innerHTML = '';        
         
     } catch (error) {
         console.error('Error populating sidebar:', error);
