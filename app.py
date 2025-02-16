@@ -359,6 +359,52 @@ def view_table(table_name):
         rows = result.fetchall()
     return render_template('view_table.html', table_name=table_name, columns=columns, rows=rows)
 
+@app.route('/api/table-info', methods=['GET'])
+def get_table_info():
+    table_name = request.args.get('table')
+    if not table_name:
+        return jsonify({"error": "Table name is required"}), 400
+
+    conn = get_db_connection("gemeinsam", "192.168.0.11")
+    cursor = conn.cursor()
+
+    query = """
+        SELECT transaktion, programm, aufruf, tabelle, variante, periode, 
+               layout_variante, zieldatei, format, weiterverarbeitung, 
+               anzahl_datensaetze, beschreibung_1, beschreibung_2, 
+               beschreibung_3, beschreibung_4 
+        FROM tbl_info_table WHERE tabelle = %s
+    """
+    
+    cursor.execute(query, (table_name,))
+    result = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+
+    # Format response as JSON
+    table_info = [
+        {
+            "transaktion": row[0],
+            "programm": row[1],
+            "aufruf": row[2],
+            "tabelle": row[3],
+            "variante": row[4],
+            "periode": row[5],
+            "layout_variante": row[6],
+            "zieldatei": row[7],
+            "format": row[8],
+            "weiterverarbeitung": row[9],
+            "anzahl_datensaetze": row[10],
+            "beschreibung_1": row[11],
+            "beschreibung_2": row[12],
+            "beschreibung_3": row[13],
+            "beschreibung_4": row[14],
+        }
+        for row in result
+    ]
+
+    return jsonify(table_info)
 
 
 
