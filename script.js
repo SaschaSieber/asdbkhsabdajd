@@ -1021,11 +1021,6 @@ async function searchTableInFourthLayer(searchString) {
 
 
 
-
-
-
-
-
 function highlightNodes(nodes, highlightColor = "#ff0000", makeOthersWhite = true) {
     const svg = d3.select("svg");
 
@@ -1041,6 +1036,39 @@ function highlightNodes(nodes, highlightColor = "#ff0000", makeOthersWhite = tru
             .attr("fill", highlightColor);
     });
 }
+
+
+async function fetchTableInfo(tableName) {
+    try {
+        let response = await fetch(`/api/table-info?table=${tableName}`);
+        let data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching table info:', error);
+        return [];
+    }
+}
+
+// Function to calculate "Update fällig"
+function calculateUpdateFaellig(timestampval, periode) {
+    if (!timestampval || !periode) return "N/A";
+
+    try {
+        let timestampDate = new Date(timestampval); // Parse timestampval as a Date object
+        let periodValue = parseInt(periode, 10); // Convert periode from string to integer
+
+        if (isNaN(periodValue)) return "Invalid period"; // Handle incorrect format
+
+        // Add the period (in days) to the timestamp date
+        timestampDate.setDate(timestampDate.getDate() + periodValue);
+
+        return timestampDate.toLocaleDateString("de-DE"); // Return formatted date in German format
+    } catch (error) {
+        console.error("Error calculating Update fällig:", error);
+        return "Error";
+    }
+}
+
 
 
 
