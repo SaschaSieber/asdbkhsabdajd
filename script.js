@@ -365,13 +365,12 @@ async function populateSidebar(d) {
     try {
         let tableData = await fetchData(d);
         let tableData2= await fetchLogs(d);
+        let tableInfoData = await fetchTableInfo(d.name); // Fetch tbl_info_eord data
+        console.log("D kommt")
+        console.log(d)
         document.getElementById('legend-container').classList.add('hidden');
         
-        
     
-    
-        
-
 
         let sidebar = document.getElementById('sidebar');
         sidebar.innerHTML = '';
@@ -379,6 +378,7 @@ async function populateSidebar(d) {
         
     sidebar.innerHTML = '';
     const additionalInfo = document.getElementById('top-right-entity');
+    
     
     document.getElementById('top-right-entity').style.display = 'table';
     if (tableData2.length > 0) {
@@ -390,7 +390,64 @@ async function populateSidebar(d) {
             <p>Zuletzt geändert: /</p>
             <p>Name: /</p>`;
     }
-    console.log(tableData2)
+    console.log(tableData2);
+    let updateFaellig = tableData2.length > 0 
+    ? calculateUpdateFaellig(tableData2[0].timestampval, tableInfoData[0].periode) 
+    : "N/A";
+
+    if (tableInfoData.length > 0) {
+        let infoContainer = document.createElement('div');
+        infoContainer.classList.add('table-info');
+    
+        let infoHtml = `
+            <h3 class="table-info-header">Tabelleninformationen</h3>
+            <div class="table-info-content">
+                <p><strong>Transaktion:</strong> ${tableInfoData[0].transaktion}</p>
+                <p><strong>Programm:</strong> ${tableInfoData[0].programm}</p>
+                <p><strong>Aufruf:</strong> ${tableInfoData[0].aufruf}</p>
+                <p><strong>Variante:</strong> ${tableInfoData[0].variante || '/'}</p>
+                <p><strong>Periode (Tage):</strong> ${tableInfoData[0].periode}</p>
+                <p><strong>Update fällig:</strong> <span style="color: red;">${updateFaellig}</span></p>
+                <p><strong>Layout Variante:</strong> ${tableInfoData[0].layout_variante || '/'}</p>
+                <p><strong>Zieldatei:</strong> ${tableInfoData[0].zieldatei || '/'}</p>
+                <p><strong>Format:</strong> ${tableInfoData[0].format || '/'}</p>
+                <p><strong>Weiterverarbeitung:</strong> ${tableInfoData[0].weiterverarbeitung || '/'}</p>
+                <p><strong>Anzahl Datensätze:</strong> ${tableInfoData[0].anzahl_datensaetze || 'N/A'}</p>
+                <p><strong>Beschreibung:</strong> 
+                    ${tableInfoData[0].beschreibung_1 || ''} 
+                    ${tableInfoData[0].beschreibung_2 || ''} 
+                    ${tableInfoData[0].beschreibung_3 || ''} 
+                    ${tableInfoData[0].beschreibung_4 || ''}
+                </p>
+            </div>
+        `;
+    
+        infoContainer.innerHTML = infoHtml;
+        
+    
+        // Check if the container already exists
+        let existingContainer = document.getElementById('table-info-container');
+        if (!existingContainer) {
+            existingContainer = document.createElement('div');
+            existingContainer.id = 'table-info-container';
+            document.body.appendChild(existingContainer); // Append it to the body
+        }
+    
+        // Add content and make sure it's visible
+        existingContainer.innerHTML = '';
+        
+        existingContainer.appendChild(infoContainer);
+        existingContainer.style.display = 'block';
+    
+        // Position it correctly below `top-right-entity`
+        let topRightEntity = document.getElementById('top-right-entity');
+        let rect = topRightEntity.getBoundingClientRect();
+    
+        existingContainer.style.position = 'absolute';
+        existingContainer.style.top = `${rect.bottom + 10}px`; // 10px below `top-right-entity`
+        existingContainer.style.left = `${rect.left - 138}px`; 
+        existingContainer.style.width = `${topRightEntity.offsetWidth}px`; // Match width
+    }
 
     let header = document.createElement('div');
 
@@ -507,17 +564,35 @@ function hideSidebar() {
     }
 
 }
+function hideTableInfoContainer() {
+    const tableInfoContainer = document.getElementById('table-info-container');
+    if (tableInfoContainer) {
+        tableInfoContainer.style.display = 'none';
+    }
+}
+
 
 
 document.addEventListener('click', function (event) {
     const sidebar = document.getElementById('sidebar');
     const link = document.getElementById('sidebarImageContainer');
     const linkPG = document.getElementById('SidebarImagePG');
-    if (!sidebar.contains(event.target) && (!link.contains(event.target)) &&(!linkPG.contains(event.target))) {
+    const tableInfoContainer = document.getElementById('table-info-container');
+    const topRightEntity = document.getElementById('top-right-entity');
+
+    if (!sidebar.contains(event.target) && 
+        !link.contains(event.target) && 
+        !linkPG.contains(event.target) &&
+        !tableInfoContainer.contains(event.target) && 
+        !topRightEntity.contains(event.target) 
+    ) {
         hideSidebar();
         hideExtraInfo();
+        hideTableInfoContainer(); // Call the new function to hide the table info
     }
 });
+
+
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
@@ -529,6 +604,7 @@ document.addEventListener("keydown", function (event) {
             }
             hideSidebar();
             hideExtraInfo();
+            hideTableInfoContainer();
             d3.select("svg").remove(); // Remove the current SVG graph
             
             // Retrieve the previous graph data from the stack
@@ -555,16 +631,6 @@ document.addEventListener("keydown", function (event) {
         }
     }
 });
-
-    
-document.addEventListener("click", function (event) {
-    const sidePanel = document.getElementById('side-panel');
-    if (!sidePanel.contains(event.target)) {
-        hideNodeInfo();
-    }
-});
-
-
 
 async function searchNodeByID(query) {
     const foundNodes = [];
