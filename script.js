@@ -391,11 +391,11 @@ async function populateSidebar(d) {
             <p>Name: /</p>`;
     }
     console.log(tableData2);
-    let updateFaellig = tableData2.length > 0 
-    ? calculateUpdateFaellig(tableData2[0].timestampval, tableInfoData[0].periode) 
-    : "N/A";
 
     if (tableInfoData.length > 0) {
+        let updateFaellig = tableData2.length > 0 
+        ? calculateUpdateFaellig(tableData2[0].timestampval, tableInfoData[0].periode) 
+        : "N/A";
         let infoContainer = document.createElement('div');
         infoContainer.classList.add('table-info');
     
