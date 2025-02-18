@@ -435,6 +435,7 @@ body {
 }
 
 
+
 #table-info-container {
     background-color: white;
     padding: 15px;
@@ -445,3 +446,49 @@ body {
     min-width: 400px; /* Ensures it does not shrink */
     max-width: 600px; /* Prevents it from being too large */
 }
+
+
+.table-wrapper {
+    max-height: 600px; /* Limits height */
+    overflow-y: auto; /* Enables scrolling */
+    overflow-x: hidden;
+    border: 1px solid #ddd;
+}
+
+.table-info-content {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-info-content th, .table-info-content td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-info-content th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+.editable-field {
+    width: 90%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.editable-link-container {
+    display: flex;
+    align-items: center;
+}
+
+.link-button {
+    margin-left: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    color: blue;
+}
+
