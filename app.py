@@ -361,7 +361,6 @@ def view_table(table_name):
 
 
 
-
 @app.route('/api/table-info', methods=['GET'])
 def get_table_info():
     table_name = request.args.get('table')
@@ -371,25 +370,14 @@ def get_table_info():
     conn = get_db_connection("gemeinsam", "192.168.0.11")
     cursor = conn.cursor()
 
-    # Get the total row count for the table
-    count_query = "SELECT COUNT(*) FROM tbl_customizing WHERE tabelle = %s"
-    cursor.execute(count_query, (table_name,))
-    total_rows = cursor.fetchone()[0]
-
-    # If there are fewer than 3 rows, return an empty response
-    if total_rows <= 3:
-        return jsonify([])
-
-    # Query to fetch data while excluding the last 3 rows
+    # Query to fetch all rows from the table
     query = """
         SELECT tabelle, feldbeschreibung, beispiel, bemerkung
         FROM tbl_customizing
         WHERE tabelle = %s
-        
-        LIMIT %s
     """
     
-    cursor.execute(query, (table_name, total_rows - 3))  # Pass two values correctly
+    cursor.execute(query, (table_name,))
     result = cursor.fetchall()
     
     cursor.close()
@@ -407,6 +395,7 @@ def get_table_info():
     ]
 
     return jsonify(table_info)
+
 
 
 # API to update table info
