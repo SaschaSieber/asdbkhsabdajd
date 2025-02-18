@@ -408,5 +408,82 @@ def get_table_info():
 
 
 
+@app.route('/api/table-info', methods=['GET'])
+def get_table_info():
+    table_name = request.args.get('table')
+    if not table_name:
+        return jsonify({"error": "Table name is required"}), 400
+
+    conn = get_db_connection("gemeinsam", "192.168.0.11")
+    cursor = conn.cursor()
+
+    # Get the total row count for the table
+    count_query = "SELECT COUNT(*) FROM tbl_customizing WHERE tabelle = %s"
+    cursor.execute(count_query, (table_name,))
+    total_rows = cursor.fetchone()[0]
+
+    # If there are fewer than 3 rows, return an empty response
+    if total_rows <= 3:
+        return jsonify([])
+
+    # Query to fetch data while excluding the last 3 rows
+    query = """
+        SELECT tabelle, feldbeschreibung, beispiel, bemerkung
+        FROM tbl_customizing
+        WHERE tabelle = %s
+        
+        LIMIT %s
+    """
+    
+    cursor.execute(query, (table_name, total_rows - 3))  # Pass two values correctly
+    result = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+
+    # Format response as a list of dictionaries
+    table_info = [
+        {
+            "tabelle": row[0],
+            "feldbeschreibung": row[1],
+            "beispiel": row[2] if row[2] else "",  # Ensuring empty string instead of None
+            "bemerkung": row[3] if row[3] else ""
+        }
+        for row in result
+    ]
+
+    return jsonify(table_info)
+
+
+# API to update table info
+@app.route("/api/update-table-info", methods=["POST"])
+def update_table_info():
+    try:
+        data = request.json
+        updated_entries = data.get("updatedData", [])
+
+        conn = get_db_connection("gemeinsam", "192.168.0.11")
+        cursor = conn.cursor()
+
+        for entry in updated_entries:
+            query = """
+                UPDATE tbl_customizing
+                SET beispiel = %s, bemerkung = %s
+                WHERE feldbeschreibung = %s
+            """
+            cursor.execute(query, (entry["beispiel"], entry["bemerkung"], entry["feldbeschreibung"]))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({"message": "Daten erfolgreich aktualisiert!"})
+
+    except Exception as e:
+        print("Fehler beim Aktualisieren:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+
 if __name__ == '__main__':
     app.run(app)
