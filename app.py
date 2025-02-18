@@ -397,14 +397,11 @@ def get_table_info():
     return jsonify(table_info)
 
 
-
-# API to update table info
 @app.route("/api/update-table-info", methods=["POST"])
 def update_table_info():
     try:
         data = request.json
         updated_entries = data.get("updatedData", [])
-
         conn = get_db_connection("gemeinsam", "192.168.0.11")
         cursor = conn.cursor()
 
@@ -413,8 +410,9 @@ def update_table_info():
                 UPDATE tbl_customizing
                 SET beispiel = %s, bemerkung = %s
                 WHERE feldbeschreibung = %s
+                AND tabelle = %s  -- Ensuring the update is for a specific table
             """
-            cursor.execute(query, (entry["beispiel"], entry["bemerkung"], entry["feldbeschreibung"]))
+            cursor.execute(query, (entry["beispiel"], entry["bemerkung"], entry["feldbeschreibung"], entry["tabelle"]))
 
         conn.commit()
         cursor.close()
@@ -425,6 +423,7 @@ def update_table_info():
     except Exception as e:
         print("Fehler beim Aktualisieren:", e)
         return jsonify({"error": str(e)}), 500
+
 
 
 
