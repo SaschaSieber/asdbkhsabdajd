@@ -434,8 +434,6 @@ body {
     animation: sf-fly-by-3 5s linear infinite;
 }
 
-
-
 #table-info-container {
     background-color: white;
     padding: 15px;
@@ -443,13 +441,14 @@ body {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     display: none;
-    min-width: 400px; /* Ensures it does not shrink */
+    min-width: 600px; /* Ensures it does not shrink */
     max-width: 600px; /* Prevents it from being too large */
+    margin-left: -100px;
 }
 
 
 .table-wrapper {
-    max-height: 600px; /* Limits height */
+    max-height: 500px; /* Limits height */
     overflow-y: auto; /* Enables scrolling */
     overflow-x: hidden;
     border: 1px solid #ddd;
