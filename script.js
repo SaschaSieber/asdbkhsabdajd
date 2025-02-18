@@ -462,7 +462,7 @@ async function populateSidebar(d) {
             existingContainer.style.width = `500px`;
 
             // Add event listener to update button
-            document.getElementById('updateTableInfo').addEventListener('click', () => updateTableInfo(tableInfoData));
+            document.getElementById('updateTableInfo').addEventListener('click', () => updateTableInfo(tableInfoData,d.name));
         }
     let header = document.createElement('div');
 
@@ -1087,13 +1087,15 @@ function calculateUpdateFaellig(timestampval, periode) {
 }
 
 
-// Function to send updates to backend
-async function updateTableInfo(tableInfoData) {
+async function updateTableInfo(tableInfoData, tableName) {
+    console.log(tableName)
     let updatedData = tableInfoData.map((row, index) => ({
+        tabelle: tableName, // Ensure the API receives the correct table name
         feldbeschreibung: row.feldbeschreibung,
         beispiel: document.getElementById(`beispiel-${index}`).value,
         bemerkung: document.getElementById(`bemerkung-${index}`).value
     }));
+    console.log(updatedData);
 
     try {
         let response = await fetch("/api/update-table-info", {
@@ -1105,12 +1107,19 @@ async function updateTableInfo(tableInfoData) {
         });
 
         let result = await response.json();
-        alert(result.message);
+        
+        if (response.ok) {
+            alert(result.message);
+        } else {
+            console.error("Fehler beim Aktualisieren:", result.error);
+            alert("Fehler beim Speichern der Änderungen.");
+        }
     } catch (error) {
         console.error("Fehler beim Aktualisieren:", error);
         alert("Fehler beim Speichern der Änderungen.");
     }
 }
+
 
 
 
