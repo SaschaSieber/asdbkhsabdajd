@@ -51,6 +51,28 @@
         <input type="text" id="search-input" placeholder="Suche nach Abf/Tabelle ...">
         <button id="search-button">Suche starten</button>
         <button id="redirect-button">Daten Verwaltung</button>
+        <button id="OpenTimeTable">Upload-Zeitplan</button>
+
+        <!-- Modal for the Timetable -->
+        <div id="timeTableModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                
+                <div id="schedule-table-container"></div>
+            </div>
+        </div>
+
+        <!-- Button Panel Fixed on the Right Side -->
+<div id="buttonModal" class="button-modal" style = "display: none;">
+    <div class="button-panel" >
+        <button class="function-button" id="updateButton">Update</button>
+        <button class="function-button" id="protokollButton">Protokoll</button>
+        <button class="function-button" id="dokuAbzugButton">Doku Abzug</button>
+        <button class="function-button exit-button" id="exitButton">EXIT</button>
+    </div>
+</div>
+
+        
         
         
         
