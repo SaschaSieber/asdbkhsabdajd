@@ -27,7 +27,7 @@ function fetchDataJson() {
             planningstoolData = data.planningstool_data;
             table_def_data=data.table_def_data;
             function_def_data=data.function_def_data;
-            console.log(toolsData)
+            console.log(function_def_data)
             // Initialize the graph with the fetched tools data
            
         })
@@ -557,7 +557,6 @@ tableData.forEach(row => {
 
 
 
-
 function hideExtraInfo() {
     let sidebar = document.getElementById('top-right-entity');
     sidebar.classList.remove('open');
@@ -648,6 +647,16 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
+    
+document.addEventListener("click", function (event) {
+    const sidePanel = document.getElementById('side-panel');
+    if (!sidePanel.contains(event.target)) {
+        hideNodeInfo();
+    }
+});
+
+
+
 async function searchNodeByID(query) {
     const foundNodes = [];
     let OldGraphData = graphData;
@@ -725,7 +734,7 @@ async function SearchFunction(query) {
     let grandchildMData;
 
     try {
-        grandchildMData = await d3.json('Function.json');
+        grandchildMData = function_def_data;
         const grandchilMdren = grandchildMData.nodes;
 
         for (const child of grandchilMdren) {
@@ -740,7 +749,7 @@ async function SearchFunction(query) {
             return;
         }
 
-        const newData = await d3.json('Function.json');
+        const newData = function_def_data;
         d3.select("svg").remove();
 
         // Filter nodes in newData based on foundNodes
@@ -1037,6 +1046,11 @@ async function searchTableInFourthLayer(searchString) {
 
 
 
+
+
+
+
+
 function highlightNodes(nodes, highlightColor = "#ff0000", makeOthersWhite = true) {
     const svg = d3.select("svg");
 
@@ -1052,7 +1066,6 @@ function highlightNodes(nodes, highlightColor = "#ff0000", makeOthersWhite = tru
             .attr("fill", highlightColor);
     });
 }
-
 
 
 async function fetchTableInfo(tableName) {
@@ -1120,8 +1133,124 @@ async function updateTableInfo(tableInfoData, tableName) {
     }
 }
 
+document.getElementById("OpenTimeTable").addEventListener("click", function() {
+    openTimeTable();
+});
+
+// Attach event listeners after the DOM loads
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("updateButton").addEventListener("click", updateFunction);
+    document.getElementById("protokollButton").addEventListener("click", showProtokoll);
+    document.getElementById("dokuAbzugButton").addEventListener("click", showDokuAbzug);
+    document.getElementById("exitButton").addEventListener("click", closeModals);
+});
+
+// Function to fetch schedule data from API
+async function fetchScheduleData() {
+    try {
+        let response = await fetch("/api/schedule-data");
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching schedule data:", error);
+        return [];
+    }
+}
+// Function to open both modals
+async function openTimeTable() {
+    const modal = document.getElementById("timeTableModal");
+    const buttonModal = document.getElementById("buttonModal");
+    const tableContainer = document.getElementById("schedule-table-container");
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const scheduleData = await fetchScheduleData(); // Fetch API data
+
+    let tableHtml = `
+        <div class="schedule-title">Upload-Zeitplan</div>
+        <div style="overflow-x: auto;">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Select</th> <!-- New selection column -->
+                        <th>Strang</th>
+                        <th>Tabelle</th>
+                        <th>Name</th>
+                        <th>Letzter Abzug</th>
+                        <th>Uhrzeit</th>
+                        <th>User</th>
+                        <th>Protokoll</th>
+                        <th>Tage</th>
+                        <th>Next Date</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+    scheduleData.forEach((row, index) => {
+        let nextDateClass = row.nextDate && row.nextDate <= currentDate ? "due-date" : "";
+
+        tableHtml += `
+            <tr data-index="${index}">
+                <td class="selection-cell"></td> <!-- Empty, toggles "X" on click -->
+                <td>${row.strang || "-"}</td>
+                <td>${row.tabelle || "-"}</td>
+                <td>${row.name || "-"}</td>
+                <td>${row.letzterAbzug || "-"}</td>
+                <td>${row.uhrzeit || "-"}</td>
+                <td class="username-highlight">${row.user || "-"}</td>
+                <td>${row.protokoll || "-"}</td>
+                <td>${row.tage || "-"}</td>
+                <td class="${nextDateClass}">${row.nextDate || "-"}</td>
+            </tr>`;
+    });
+
+    tableHtml += `</tbody></table></div>`;
+
+    tableContainer.innerHTML = tableHtml;
+    modal.style.display = "block"; // Open table modal
+    buttonModal.style.display = "block"; // Open button modal
+
+    // Attach click event listeners to rows
+    document.querySelectorAll(".schedule-table tbody tr").forEach(row => {
+        row.addEventListener("click", function() {
+            toggleRowSelection(this);
+        });
+    });
+}
+
+// Function to close both modals
+function closeModals() {
+    document.getElementById("timeTableModal").style.display = "none";
+    document.getElementById("buttonModal").style.display = "none";
+}
+
+// Function to toggle row selection
+function toggleRowSelection(row) {
+    let selectionCell = row.querySelector(".selection-cell");
+
+    if (row.classList.contains("selected-row")) {
+        row.classList.remove("selected-row");
+        selectionCell.textContent = ""; // Remove "X"
+    } else {
+        row.classList.add("selected-row");
+        selectionCell.textContent = "X"; // Mark row with "X"
+    }
+}
+
+// Functions for button actions (Modify these for real functionality)
+function updateFunction() {
+    window.open("http://82.165.126.38:5000/", "_blank"); // Replace with the real URL
+}
+
+function showProtokoll() {
+    window.open("https://amotiqautomotive.sharepoint.com/:x:/r/sites/DaimlerProduktiv/_layouts/15/Doc.aspx?sourcedoc=%7B908A6210-B64B-494F-AF7E-6CD05A0F6E64%7D&file=GSS%20Datenabz%25u00fcge.xlsx&action=default&mobileredirect=true", "_blank"); // Replace with the real URL
+}
+
+function showDokuAbzug() {
+    window.open("https://amotiqautomotive.sharepoint.com/:x:/r/sites/DaimlerProduktiv/_layouts/15/Doc.aspx?sourcedoc=%7B908A6210-B64B-494F-AF7E-6CD05A0F6E64%7D&file=GSS%20Datenabz%25u00fcge.xlsx&action=default&mobileredirect=true", "_blank"); // Replace with the real URL
+}
+
 
 
 
 
 updateGraph(graphData);
+
