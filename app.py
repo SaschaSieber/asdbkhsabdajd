@@ -304,25 +304,34 @@ def get_table_columns(table_name):
         return jsonify({'error': 'Error querying database'}), 500
 
 
-@app.route('/uploadlogs/<table_name>', methods=['GET'])
 def get_upload_logs(table_name):
-    try:
-        conn = get_db_connection("gemeinsam", "192.168.0.11")
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-        query = """
-            SELECT username, timestampval
-            FROM tbl_uploadlog
-            WHERE tabellename = %s
-            ORDER BY timestampval DESC;
-        """
-        cursor.execute(query, (table_name,))
-        rows = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return jsonify(rows)
-    except Exception as e:
-        print('Error querying database:', e)
-        return jsonify({'error': 'Error querying database'}), 500
+    """ Fetches the latest upload log entry for a given table """
+    conn = get_db_connection("gemeinsam", "dbc95a5.online-server.cloud")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    
+    query = """
+        SELECT username, timestampval
+        FROM tbl_uploadlog
+        WHERE tabellename = %s
+        ORDER BY timestampval DESC
+        LIMIT 1;
+    """
+    
+    cursor.execute(query, (table_name,))
+    row = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if row and row["timestampval"]:
+        timestamp = row["timestampval"]  # Already a datetime object
+
+        return {
+            "letzterAbzug": timestamp.strftime("%d.%m.%Y"),  # Convert directly
+            "uhrzeit": timestamp.strftime("%H:%M:%S"),
+            "user": row["username"]
+        }
+
+    return {"letzterAbzug": "", "uhrzeit": "", "user": ""}  # Return empty if no log found
 
 
 
