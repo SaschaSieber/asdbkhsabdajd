@@ -268,9 +268,9 @@ circle {
     display: none;
     position: fixed;
     z-index: 1000;
-    left: -350px;
+    left: -190px;
     top: 0;
-    width: 200%;
+    width: 160%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     font-family: 'Courier New', Courier, monospace;
@@ -283,7 +283,7 @@ circle {
     padding: 20px;
     border: 2px solid  #BE4917;;
     width: 100%;
-    min-width: 1500px;
+    min-width: 100px;
     text-align: center;
     border-radius: 8px;
     box-shadow:  #BE4917;
@@ -296,7 +296,7 @@ circle {
     background-color:  #BE4917;
     color: black; /* Ensures good contrast */
     font-weight: bold;
-    font-size: 29px;
+    font-size: 23px;
     text-align: center;
     padding: 10px;
     border-radius: 6px; /* Adds rounded edges */
@@ -451,7 +451,7 @@ Text for User Column */
 .button-modal {
     position: fixed;
     top: 50%;
-    right: -700px; /* Adjust this value if needed */
+    right: -470px; /* Adjust this value if needed */
     transform: translateY(120%); /* Center it vertically */
     background-color: black;
     color: #BE4917;
