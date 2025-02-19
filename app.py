@@ -306,7 +306,7 @@ def get_table_columns(table_name):
 
 def get_upload_logs(table_name):
     """ Fetches the latest upload log entry for a given table """
-    conn = get_db_connection("gemeinsam", "dbc95a5.online-server.cloud")
+    conn = get_db_connection("gemeinsam", "192.168.0.11")
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     
     query = """
