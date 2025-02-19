@@ -1161,7 +1161,7 @@ async function openTimeTable() {
     const buttonModal = document.getElementById("buttonModal");
     const tableContainer = document.getElementById("schedule-table-container");
 
-    const currentDate = new Date().toISOString().split("T")[0];
+    const currentDate = new Date(); // Get current date
     const scheduleData = await fetchScheduleData(); // Fetch API data
 
     let tableHtml = `
@@ -1185,7 +1185,20 @@ async function openTimeTable() {
                 <tbody>`;
 
     scheduleData.forEach((row, index) => {
-        let nextDateClass = row.nextDate && row.nextDate <= currentDate ? "due-date" : "";
+        let nextDateFormatted = "-"; // Default value
+
+        if (row.letzterAbzug && row.tage) {
+            const letzterAbzugDate = parseGermanDate(row.letzterAbzug); // Convert German date to JS Date
+            if (!isNaN(letzterAbzugDate)) {
+                let nextDate = new Date(letzterAbzugDate);
+                nextDate.setDate(nextDate.getDate() + parseInt(row.tage, 10)); // Add Tage
+
+                nextDateFormatted = formatGermanDate(nextDate); // Convert back to German format
+            }
+        }
+
+        // Check if due date has passed
+        let nextDateClass = isDueDatePassed(nextDateFormatted, currentDate) ? "due-date" : "";
 
         tableHtml += `
             <tr data-index="${index}">
@@ -1198,7 +1211,7 @@ async function openTimeTable() {
                 <td class="username-highlight">${row.user || "-"}</td>
                 <td>${row.protokoll || "-"}</td>
                 <td>${row.tage || "-"}</td>
-                <td class="${nextDateClass}">${row.nextDate || "-"}</td>
+                <td class="${nextDateClass}">${nextDateFormatted}</td>
             </tr>`;
     });
 
@@ -1220,6 +1233,28 @@ async function openTimeTable() {
 function closeModals() {
     document.getElementById("timeTableModal").style.display = "none";
     document.getElementById("buttonModal").style.display = "none";
+}
+// Convert German DD.MM.YYYY date format to JavaScript Date object
+function parseGermanDate(germanDate) {
+    if (!germanDate) return NaN;
+    const parts = germanDate.split(".");
+    if (parts.length === 3) {
+        return new Date(parts[2], parts[1] - 1, parts[0]); // YYYY, MM (0-based), DD
+    }
+    return NaN;
+}
+
+// Convert JavaScript Date object to German DD.MM.YYYY format
+function formatGermanDate(date) {
+    if (!(date instanceof Date) || isNaN(date)) return "-";
+    return `${String(date.getDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}.${date.getFullYear()}`;
+}
+
+// Check if the due date has passed
+function isDueDatePassed(dueDate, currentDate) {
+    if (!dueDate || dueDate === "-") return false;
+    const dueDateObj = parseGermanDate(dueDate);
+    return dueDateObj < currentDate;
 }
 
 // Function to toggle row selection
