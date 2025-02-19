@@ -424,6 +424,68 @@ def update_table_info():
         print("Fehler beim Aktualisieren:", e)
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/schedule-data', methods=['GET'])
+def get_schedule_data():
+    conn = get_db_connection("gemeinsam", "192.168.0.11")
+    cursor = conn.cursor()
+
+    # Fetch all table metadata
+    query = """
+        SELECT 
+            tabelle, feldbeschreibung, beispiel, bemerkung
+        FROM tbl_customizing
+    """
+    
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    table_records = {}
+
+    for row in result:
+        table_name = row[0]
+        feldbeschreibung = row[1]
+        beispiel = row[2] if row[2] else ""
+        bemerkung = row[3] if row[3] else ""
+
+        if table_name not in table_records:
+            table_records[table_name] = {
+                "strang": "",
+                "tabelle": table_name,
+                "name": "",
+                "letzterAbzug": "",
+                "uhrzeit": "",
+                "user": "",
+                "protokoll": "",
+                "tage": None,
+                "nextDate": ""
+            }
+
+        if feldbeschreibung == "Strang":
+            table_records[table_name]["strang"] = beispiel
+        elif feldbeschreibung == "Tabellenname":
+            table_records[table_name]["name"] = beispiel
+        elif feldbeschreibung == "Name Fehlerprotokoll":
+            table_records[table_name]["protokoll"] = beispiel
+        elif feldbeschreibung == "Aktualisierung (Tage)" and beispiel.isdigit():
+            table_records[table_name]["tage"] = int(beispiel)
+
+    # Fetch upload logs for each table
+    for table_name, record in table_records.items():
+        upload_log = get_upload_logs(table_name)
+        record.update(upload_log)
+
+        # Calculate "Next Date"
+        if record["letzterAbzug"] and record["tage"]:
+            try:
+                last_date = datetime.strptime(record["letzterAbzug"], "%d.%m.%Y")
+                next_date = last_date + timedelta(days=record["tage"])
+                record["nextDate"] = next_date.strftime("%d.%m.%Y")
+            except ValueError:
+                record["nextDate"] = "Invalid Date"
+
+    return jsonify(list(table_records.values()))
 
 
 
