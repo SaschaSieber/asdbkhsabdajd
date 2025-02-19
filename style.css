@@ -16,13 +16,27 @@ body {
 .top-right-entity {
     position: absolute;
     top: 10px;
-    right: 500px;
+    right: 520px;
     background-color: #ffffff; /* Changed to white for a cleaner look */
     padding: 15px; /* Increased padding for better spacing */
     border: 1px solid #ddd; /* Lighter border color */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Smoother and lighter shadow */
     display: none;
+    z-index: 100000;
+}
+
+
+.left-panel {
+    position: absolute;
+    top: 10px;
+    right: 500px;
+    background-color: #ffffff; /* Changed to white for a cleaner look */
+    padding: 15px; /* Increased padding for better spacing */
+    border: 1px solid #ddd; /* Lighter border color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Smoother and lighter shadow */
+    display: block;
     z-index: 100000;
 }
 
@@ -42,7 +56,7 @@ body {
 
 }
 .sidebar {
-    width: 450px; /* Adjust width as needed */
+    width: 500px; /* Adjust width as needed */
     background-color: #ffffff; /* Example background color */
     padding: 10px;
     
@@ -233,6 +247,148 @@ circle {
     background-color: #1c4b82; /* Darker green on hover */
 }
 
+#OpenTimeTable {
+    padding: 8px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #20548F; /* Green background */
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    position: relative;
+    z-index: 999;
+}
+
+#OpenTimeTable {
+    background-color: #1c4b82; /* Darker green on hover */
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: -350px;
+    top: 0;
+    width: 200%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.modal-content {
+    background-color: black;
+    color: #BE4917;
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid  #BE4917;;
+    width: 100%;
+    min-width: 1500px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow:  #BE4917;
+    max-height:550px;
+    overflow-y: auto;
+}
+
+/* Yellow Background for the Headline */
+.schedule-title {
+    background-color:  #BE4917;
+    color: black; /* Ensures good contrast */
+    font-weight: bold;
+    font-size: 29px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px; /* Adds rounded edges */
+    margin-bottom: 10px; /* Adds spacing below the title */
+}
+
+.close-button {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right:10px;
+    color: black;
+}
+
+.departure-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    color:  #BE4917;
+    margin-bottom: 30px;
+}
+
+/* Schedule Table Styling */
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 17px;
+}
+/* 
+
+
+Text for User Column */
+.username-highlight {
+    color: yellow !important;
+    
+}
+
+
+.schedule-table th, .schedule-table td {
+    border-bottom: 2px solid  #BE4917;
+    padding: 8px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.schedule-table th {
+    background-color: black;
+    color: #BE4917;
+    font-weight: bold;
+}
+
+.schedule-table td {
+    color: white;
+}
+
+/* Blinking Effect for "Next Date" */
+.blinking {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+/* Red Color for Due Dates */
+/* Red Background for Due Dates */
+/* Red Background for Due Dates */
+/* Softer Red Background for Due Dates */
+.due-date {
+    background-color: rgb(252, 56, 56) !important; /* Softer red with transparency */
+    color: white !important;
+    font-weight: bold;
+    border-radius: 2px; /* Optional: adds slight rounding for a softer feel */
+    padding: 5px; /* Adds spacing for better readability */
+}
+/* Style for Selected Row */
+.selected-row {
+    background-color: rgba(248, 110, 110, 0.2) !important; /* Soft yellow */
+    font-weight: bold;
+}
+
+
+
+
+
+@keyframes blink-animation {
+    50% {
+        opacity: 0;
+    }
+}
+
+
+
+
+
 
 
 #search-bar {
@@ -290,6 +446,61 @@ circle {
     margin-right: 5px;
     border: 1px solid #ccc;
     background-color: white; /* Set background color of color box */
+}
+/* Button Modal - Positioned to the Right Side */
+.button-modal {
+    position: fixed;
+    top: 50%;
+    right: -700px; /* Adjust this value if needed */
+    transform: translateY(120%); /* Center it vertically */
+    background-color: black;
+    color: #BE4917;
+    border: 2px solid #BE4917;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Button Panel - Keeps Buttons Aligned Vertically */
+.button-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    display:'none';
+}
+
+/* Button Styling to Match Table */
+.function-button {
+    background-color: black;
+    color: #BE4917;
+    border: 2px solid #BE4917;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 180px;
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: uppercase;
+    text-align: center;
+    border-radius: 4px;
+}
+
+/* Hover Effect */
+.function-button:hover {
+    background-color: #BE4917;
+    color: black;
+}
+
+/* Exit Button (Soft Red) */
+.exit-button {
+    background-color: #ffcccc;
+    border: 2px solid #ff6666;
+    color: black;
+}
+
+.exit-button:hover {
+    background-color: #ff9999;
 }
 
 
@@ -434,6 +645,8 @@ body {
     animation: sf-fly-by-3 5s linear infinite;
 }
 
+
+
 #table-info-container {
     background-color: white;
     padding: 15px;
@@ -441,14 +654,13 @@ body {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
     z-index: 1000;
     display: none;
-    min-width: 600px; /* Ensures it does not shrink */
+    min-width: 400px; /* Ensures it does not shrink */
     max-width: 600px; /* Prevents it from being too large */
-    margin-left: -100px;
 }
 
 
 .table-wrapper {
-    max-height: 500px; /* Limits height */
+    max-height: 600px; /* Limits height */
     overflow-y: auto; /* Enables scrolling */
     overflow-x: hidden;
     border: 1px solid #ddd;
@@ -490,4 +702,3 @@ body {
     font-size: 16px;
     color: blue;
 }
-
