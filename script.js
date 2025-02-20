@@ -1170,17 +1170,17 @@ async function openTimeTable() {
         <table class="schedule-table">
             <thead>
 
-                <tr class="filter-row">
+             <tr class="filter-row">
                     <th></th>
                     <th><input type="text" class="filter-input" data-column="1" placeholder="Strang"></th>
                     <th><input type="text" class="filter-input" data-column="2" placeholder="Tabelle"></th>
                     <th><input type="text" class="filter-input" data-column="3" placeholder="Name"></th>
-                    <th><input type="text" class="filter-input" data-column="4" placeholder="Abzug"></th>
+                    <th><input type="text" class="filter-input" data-column="4" placeholder="Upload"></th>
                     <th><input type="text" class="filter-input" data-column="5" placeholder="Uhrzeit"></th>
                     <th><input type="text" class="filter-input" data-column="6" placeholder="User"></th>
                     <th><input type="text" class="filter-input" data-column="7" placeholder="Protokoll"></th>
                     <th><input type="text" class="filter-input" data-column="8" placeholder="Tage"></th>
-                    <th><input type="text" class="filter-input" data-column="9" placeholder="Date"></th>
+                    <th><input type="text" class="filter-input" data-column="9" placeholder="Nächster Upload"></th>
                 </tr>
             </thead>
             <tbody>`;
