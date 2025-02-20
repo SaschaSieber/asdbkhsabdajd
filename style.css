@@ -371,12 +371,24 @@ Text for User Column */
 }
 /* Style for Selected Row */
 .selected-row {
-    background-color: rgba(248, 110, 110, 0.2) !important; /* Soft yellow */
+    background-color: rgba(137, 137, 137, 0.2) !important; /* Soft yellow */
     font-weight: bold;
 }
 
 
 
+.filter-input {
+    background-color: black;
+    color:rgb(255, 255, 255);
+    border: 1px solid #BE4917;
+    font-family: 'VT323', monospace;
+    font-size:16px;
+    padding: 4px;
+    border-radius: 4px;
+    margin-top: 5px;
+    width: 97%;
+    box-sizing: border-box;
+}
 
 
 @keyframes blink-animation {
