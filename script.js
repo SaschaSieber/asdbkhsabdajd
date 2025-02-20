@@ -1165,24 +1165,28 @@ async function openTimeTable() {
     const scheduleData = await fetchScheduleData(); // Fetch API data
 
     let tableHtml = `
-        <div class="schedule-title">Upload-Zeitplan</div>
-        <div style="overflow-x: auto;">
-            <table class="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Select</th> <!-- New selection column -->
-                        <th>Strang</th>
-                        <th>Tabelle</th>
-                        <th>Name</th>
-                        <th>Letzter Abzug</th>
-                        <th>Uhrzeit</th>
-                        <th>User</th>
-                        <th>Protokoll</th>
-                        <th>Tage</th>
-                        <th>Next Date</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+    <div class="schedule-title">Upload-Zeitplan</div>
+    <div style="overflow-x: auto;">
+        <table class="schedule-table">
+            <thead>
+
+                <tr class="filter-row">
+                    <th></th>
+                    <th><input type="text" class="filter-input" data-column="1" placeholder="Strang"></th>
+                    <th><input type="text" class="filter-input" data-column="2" placeholder="Tabelle"></th>
+                    <th><input type="text" class="filter-input" data-column="3" placeholder="Name"></th>
+                    <th><input type="text" class="filter-input" data-column="4" placeholder="Abzug"></th>
+                    <th><input type="text" class="filter-input" data-column="5" placeholder="Uhrzeit"></th>
+                    <th><input type="text" class="filter-input" data-column="6" placeholder="User"></th>
+                    <th><input type="text" class="filter-input" data-column="7" placeholder="Protokoll"></th>
+                    <th><input type="text" class="filter-input" data-column="8" placeholder="Tage"></th>
+                    <th><input type="text" class="filter-input" data-column="9" placeholder="Date"></th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+
+
 
     scheduleData.forEach((row, index) => {
         let nextDateFormatted = "-"; // Default value
@@ -1220,6 +1224,39 @@ async function openTimeTable() {
     tableContainer.innerHTML = tableHtml;
     modal.style.display = "block"; // Open table modal
     buttonModal.style.display = "block"; // Open button modal
+    // Function to Filter Table Rows
+function filterTable() {
+    const filters = {};
+    document.querySelectorAll(".filter-input").forEach(input => {
+        const column = parseInt(input.getAttribute("data-column"));
+        const value = input.value.toLowerCase();
+        filters[column] = value;
+    });
+
+    const rows = document.querySelectorAll(".schedule-table tbody tr");
+    rows.forEach(row => {
+        let isVisible = true;
+
+        // Check each filter
+        Object.keys(filters).forEach(columnIndex => {
+            const cellValue = row.cells[columnIndex].textContent.toLowerCase();
+            const filterValue = filters[columnIndex];
+
+            if (filterValue && !cellValue.includes(filterValue)) {
+                isVisible = false;
+            }
+        });
+
+        // Toggle row visibility
+        row.style.display = isVisible ? "" : "none";
+    });
+}
+
+// Attach Event Listeners for Filtering
+document.querySelectorAll(".filter-input").forEach(input => {
+    input.addEventListener("keyup", filterTable);
+});
+
 
     // Attach click event listeners to rows
     document.querySelectorAll(".schedule-table tbody tr").forEach(row => {
@@ -1257,18 +1294,20 @@ function isDueDatePassed(dueDate, currentDate) {
     return dueDateObj < currentDate;
 }
 
-// Function to toggle row selection
-function toggleRowSelection(row) {
-    let selectionCell = row.querySelector(".selection-cell");
 
-    if (row.classList.contains("selected-row")) {
-        row.classList.remove("selected-row");
-        selectionCell.textContent = ""; // Remove "X"
-    } else {
-        row.classList.add("selected-row");
-        selectionCell.textContent = "X"; // Mark row with "X"
-    }
+// Global Function to Toggle Row Selection (One Row Only)
+function toggleRowSelection(row) {
+    // Deselect all rows first
+    document.querySelectorAll(".selected-row").forEach(selectedRow => {
+        selectedRow.classList.remove("selected-row");
+        selectedRow.querySelector(".selection-cell").textContent = ""; // Clear "X"
+    });
+
+    // Select the clicked row
+    row.classList.add("selected-row");
+    row.querySelector(".selection-cell").textContent = "X"; // Mark row with "X"
 }
+
 
 // Functions for button actions (Modify these for real functionality)
 function updateFunction() {
