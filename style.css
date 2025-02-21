@@ -672,7 +672,7 @@ body {
 
 
 .table-wrapper {
-    max-height: 600px; /* Limits height */
+     max-height: 450px; 
     overflow-y: auto; /* Enables scrolling */
     overflow-x: hidden;
     border: 1px solid #ddd;
