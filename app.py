@@ -307,7 +307,7 @@ def get_table_columns(table_name):
 @app.route('/uploadlogs/<table_name>', methods=['GET'])
 def get_upload_logs(table_name):
     """ Fetches the latest upload log entry for a given table """
-    conn = get_db_connection("gemeinsam", "192.168.0.11")
+    conn = get_db_connection("gemeinsam", "dbc95a5.online-server.cloud")
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     
     query = """
@@ -329,10 +329,13 @@ def get_upload_logs(table_name):
         return {
             "letzterAbzug": timestamp.strftime("%d.%m.%Y"),  # Convert directly
             "uhrzeit": timestamp.strftime("%H:%M:%S"),
+            "timestamp": timestamp,
             "user": row["username"]
         }
 
     return {"letzterAbzug": "", "uhrzeit": "", "user": ""}  # Return empty if no log found
+
+
 
 
 
