@@ -304,7 +304,7 @@ def get_table_columns(table_name):
         print('Error querying database:', e)
         return jsonify({'error': 'Error querying database'}), 500
 
-
+@app.route('/uploadlogs/<table_name>', methods=['GET'])
 def get_upload_logs(table_name):
     """ Fetches the latest upload log entry for a given table """
     conn = get_db_connection("gemeinsam", "192.168.0.11")
