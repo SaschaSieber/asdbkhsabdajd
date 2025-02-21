@@ -377,10 +377,10 @@ async function populateSidebar(d) {
         document.getElementById('top-right-entity').style.display = 'table';
 
         // Display last update information
-        if (tableData2.length > 0) {
+        if (tableData2 && tableData2.letzterAbzug) {
             additionalInfo.innerHTML = `
-                <p><strong>Zuletzt geändert:</strong> <span style="color: red;">${tableData2[0].timestampval}</span></p>
-                <p><strong>Name:</strong> <span style="color: red;">${tableData2[0].username}</span></p>`;
+                <p><strong>Zuletzt geändert:</strong> <span style="color: red;">${tableData2.timestamp}</span></p>
+                <p><strong>Name:</strong> <span style="color: red;">${tableData2.user}</span></p>`;
         } else {
             additionalInfo.innerHTML = `
                 <p><strong>Zuletzt geändert:</strong> /</p>
