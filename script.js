@@ -35,7 +35,7 @@ function fetchDataJson() {
 }
 
 document.getElementById("redirect-button").addEventListener("click", function() {
-    window.location.href = "http://82.165.126.38:5000"; // Specify your desired link here
+    window.location.href = "http://a11ccbd.online-server.cloud:5000"; // Specify your desired link here
 });
 
 function setNodeColors(nodes) {
@@ -212,7 +212,7 @@ function updateGraph(data) {
              else if(d.level===2& event.ctrlKey ){
                 console.log("test")
                 const link = document.createElement('a');
-                link.href = 'http://82.165.126.38:3000/tool_info/Planungstool';
+                link.href = 'http://a11ccbd.online-server.cloud:3000/tool_info/Planungstool';
                 link.target = '_blank'; 
                 link.click();
 
@@ -327,7 +327,7 @@ function sendValueToBackend(selectedValue) {
 
 async function FetToolsInfo(d) {
     try {
-        let response = await fetch(`http://82.165.126.38:3000/tool_info/${d.name}`);
+        let response = await fetch(`http://a11ccbd.online-server.cloud:3000/tool_info/${d.name}`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1375,7 +1375,7 @@ function toggleRowSelection(row) {
 
 // Functions for button actions (Modify these for real functionality)
 function updateFunction() {
-    window.open("http://82.165.126.38:5000/", "_blank"); // Replace with the real URL
+    window.open("http://a11ccbd.online-server.cloud:5000/", "_blank"); // Replace with the real URL
 }
 
 function showProtokoll() {
