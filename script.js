@@ -1155,7 +1155,6 @@ async function fetchScheduleData() {
         return [];
     }
 }
-// Function to open both modals
 async function openTimeTable() {
     const modal = document.getElementById("timeTableModal");
     const buttonModal = document.getElementById("buttonModal");
@@ -1169,8 +1168,19 @@ async function openTimeTable() {
     <div style="overflow-x: auto;">
         <table class="schedule-table">
             <thead>
-
-             <tr class="filter-row">
+                <tr>
+                    <th>Select</th>
+                    <th>Strang</th>
+                    <th>Tabelle</th>
+                    <th>Name</th>
+                    <th class="sortable" data-column="4">Upload ▲▼</th>
+                    <th>Uhrzeit</th>
+                    <th>User</th>
+                    <th>Protokoll</th>
+                    <th>Tage</th>
+                    <th class="sortable" data-column="9">Nächster Upload ▲▼</th>
+                </tr>
+                <tr class="filter-row">
                     <th></th>
                     <th><input type="text" class="filter-input" data-column="1" placeholder="Strang"></th>
                     <th><input type="text" class="filter-input" data-column="2" placeholder="Tabelle"></th>
@@ -1184,6 +1194,8 @@ async function openTimeTable() {
                 </tr>
             </thead>
             <tbody>`;
+
+
 
 
 
@@ -1225,6 +1237,7 @@ async function openTimeTable() {
     modal.style.display = "block"; // Open table modal
     buttonModal.style.display = "block"; // Open button modal
     // Function to Filter Table Rows
+    
 function filterTable() {
     const filters = {};
     document.querySelectorAll(".filter-input").forEach(input => {
@@ -1250,6 +1263,7 @@ function filterTable() {
         // Toggle row visibility
         row.style.display = isVisible ? "" : "none";
     });
+
 }
 
 // Attach Event Listeners for Filtering
@@ -1264,7 +1278,57 @@ document.querySelectorAll(".filter-input").forEach(input => {
             toggleRowSelection(this);
         });
     });
+
+    // Attach Event Listeners for Sorting
+document.querySelectorAll(".sortable").forEach(header => {
+    header.addEventListener("click", function() {
+        const columnIndex = parseInt(header.getAttribute("data-column"));
+        sortTableByDate(columnIndex);
+    });
+});
+
 }
+
+
+let sortDirection = {}; // Store sort direction for each column
+
+// Function to Sort Table by Date Column
+function sortTableByDate(columnIndex) {
+    const tableBody = document.querySelector(".schedule-table tbody");
+    const rows = Array.from(tableBody.rows);
+
+    // Toggle Sort Direction
+    if (!sortDirection[columnIndex]) {
+        sortDirection[columnIndex] = 'asc';
+    } else {
+        sortDirection[columnIndex] = sortDirection[columnIndex] === 'asc' ? 'desc' : 'asc';
+    }
+
+    // Convert German Date (DD.MM.YYYY) to JavaScript Date Object
+    const parseDate = (dateStr) => {
+        const parts = dateStr.split(".");
+        if (parts.length === 3) {
+            return new Date(parts[2], parts[1] - 1, parts[0]); // YYYY, MM (0-based), DD
+        }
+        return new Date(0); // Invalid dates go to the bottom
+    };
+
+    // Sort Rows
+    rows.sort((a, b) => {
+        const dateA = parseDate(a.cells[columnIndex].textContent);
+        const dateB = parseDate(b.cells[columnIndex].textContent);
+
+        if (sortDirection[columnIndex] === 'asc') {
+            return dateA - dateB;
+        } else {
+            return dateB - dateA;
+        }
+    });
+
+    // Append Sorted Rows
+    rows.forEach(row => tableBody.appendChild(row));
+}
+
 
 // Function to close both modals
 function closeModals() {
@@ -1321,7 +1385,6 @@ function showProtokoll() {
 function showDokuAbzug() {
     window.open("https://amotiqautomotive.sharepoint.com/:x:/r/sites/DaimlerProduktiv/_layouts/15/Doc.aspx?sourcedoc=%7B908A6210-B64B-494F-AF7E-6CD05A0F6E64%7D&file=GSS%20Datenabz%25u00fcge.xlsx&action=default&mobileredirect=true", "_blank"); // Replace with the real URL
 }
-
 
 
 
