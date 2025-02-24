@@ -714,3 +714,12 @@ body {
     font-size: 16px;
     color: blue;
 }
+.sortable {
+    cursor: pointer;
+    color: #BE4917;
+    text-decoration: underline;
+}
+
+.sortable:hover {
+    color: #fff;
+}
